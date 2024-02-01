@@ -1689,6 +1689,12 @@ EXTRA_DYNAMIC_QUERY_FILTERS: ExtraDynamicQueryFilters = {}
 
 
 # -------------------------------------------------------------------
+# *                     DATAAI CUSTOM CONFIG                        *
+# -------------------------------------------------------------------
+INDEX_LINK = 'www.google.com'
+HOME_LINK = 'www.google.com'
+
+# -------------------------------------------------------------------
 # *                WARNING:  STOP EDITING  HERE                    *
 # -------------------------------------------------------------------
 # Don't add config values below this line since local configs won't be
