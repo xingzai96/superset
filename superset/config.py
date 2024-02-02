@@ -1695,7 +1695,7 @@ EXTRA_DYNAMIC_QUERY_FILTERS: ExtraDynamicQueryFilters = {}
 APP_NAME = "DataAIReporting"
 
 # Specify the App icon
-APP_ICON = "/static/assets/dataai/favicon.png"
+APP_ICON = "https://dataaisolutions.com/assets/custom/img/logo.png"
 
 # Specify where clicking the logo would take the user
 # e.g. setting it to '/' would take the user to '/superset/welcome/'
