@@ -239,7 +239,7 @@ SQLALCHEMY_ENCRYPTED_FIELD_TYPE_ADAPTER = (  # pylint: disable=invalid-name
 QUERY_SEARCH_LIMIT = 1000
 
 # Flask-WTF flag for CSRF
-WTF_CSRF_ENABLED = True
+# WTF_CSRF_ENABLED = True
 
 # Add endpoints that need to be exempt from CSRF protection
 WTF_CSRF_EXEMPT_LIST = [
@@ -748,7 +748,7 @@ EXPLORE_FORM_DATA_CACHE_CONFIG: CacheConfig = {
 STORE_CACHE_KEYS_IN_METADATA_DB = False
 
 # CORS Options
-ENABLE_CORS = False
+# ENABLE_CORS = False
 CORS_OPTIONS: dict[Any, Any] = {}
 
 # Sanitizes the HTML content used in markdowns to allow its rendering in a safe manner.
@@ -976,7 +976,7 @@ CELERY_CONFIG = CeleryConfig  # pylint: disable=invalid-name
 # override anything set within the app
 DEFAULT_HTTP_HEADERS: dict[str, Any] = {}
 OVERRIDE_HTTP_HEADERS: dict[str, Any] = {}
-HTTP_HEADERS: dict[str, Any] = {}
+# HTTP_HEADERS: dict[str, Any] = {}
 
 # The db id here results in selecting this one as a default in SQL Lab
 DEFAULT_DB_ID = None
@@ -1420,7 +1420,7 @@ TEST_DATABASE_CONNECTION_TIMEOUT = timedelta(seconds=30)
 CONTENT_SECURITY_POLICY_WARNING = True
 
 # Do you want Talisman enabled?
-TALISMAN_ENABLED = utils.cast_to_boolean(os.environ.get("TALISMAN_ENABLED", True))
+# TALISMAN_ENABLED = utils.cast_to_boolean(os.environ.get("TALISMAN_ENABLED", True))
 
 # If you want Talisman, how do you want it configured??
 TALISMAN_CONFIG = {
@@ -1717,6 +1717,12 @@ HTML_SANITIZATION_SCHEMA_EXTENSIONS = {
 
 DEFAULT_FEATURE_FLAGS['DRILL_BY'] = True
 DEFAULT_FEATURE_FLAGS['HORIZONTAL_FILTER_BAR'] = True
+
+# SESSION_COOKIE_HTTPONLY = False
+WTF_CSRF_ENABLED = False
+HTTP_HEADERS={"X-Frame-Options":"ALLOWALL"}
+TALISMAN_ENABLED = False
+ENABLE_CORS = True
 
 # -------------------------------------------------------------------
 # *                WARNING:  STOP EDITING  HERE                    *
