@@ -126,5 +126,6 @@ git-push:
 	git push
 
 deploy:
+	git pull
 	docker compose -f docker-compose-non-dev.yml down
 	docker compose -f docker-compose-non-dev.yml up --detach
