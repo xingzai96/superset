@@ -115,3 +115,7 @@ report-celery-beat:
 
 admin-user:
 	superset fab create-admin
+
+docker-build:
+# 	docker build -t dataai/superset:$(shell git log -n 1 --pretty=format:"%h") .
+	docker build -t dataai/superset:3.1.0_dev .
