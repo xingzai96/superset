@@ -127,5 +127,6 @@ git-push:
 
 deploy:
 	git pull
+	docker build -t dataai/superset:3.1.0_dev .
 	docker compose -f docker-compose-non-dev.yml down
 	docker compose -f docker-compose-non-dev.yml up --detach
