@@ -125,4 +125,6 @@ git-push:
 	git commit -m "fast commit"
 	git push
 
-
+deploy:
+	docker compose -f docker-compose-non-dev.yml down
+	docker compose -f docker-compose-non-dev.yml up --detach
