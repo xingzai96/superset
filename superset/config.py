@@ -1701,8 +1701,8 @@ APP_ICON = "https://dataaisolutions.com/assets/custom/img/logo.png"
 # e.g. setting it to '/' would take the user to '/superset/welcome/'
 LOGO_TARGET_PATH = "https://dataaisolutions.com"
 
-INDEX_LINK = '/superset/dashboard/1'
-HOME_LINK = '/superset/dashboard/1'
+INDEX_LINK = '/superset/dashboard/home/?standalone=true'
+HOME_LINK = '/superset/dashboard/home/?standalone=true'
 
 HTML_SANITIZATION_SCHEMA_EXTENSIONS = {
   "attributes": {
@@ -1719,9 +1719,9 @@ DEFAULT_FEATURE_FLAGS['DRILL_BY'] = True
 DEFAULT_FEATURE_FLAGS['HORIZONTAL_FILTER_BAR'] = True
 
 # SESSION_COOKIE_HTTPONLY = False
-WTF_CSRF_ENABLED = False
+WTF_CSRF_ENABLED = True
 HTTP_HEADERS={"X-Frame-Options":"ALLOWALL"}
-TALISMAN_ENABLED = False
+TALISMAN_ENABLED = True
 ENABLE_CORS = True
 
 # -------------------------------------------------------------------
