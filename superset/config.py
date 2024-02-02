@@ -98,7 +98,7 @@ PACKAGE_JSON_FILE = str(files("superset") / "static/assets/package.json")
 #     "type": "image/png"
 #     "rel": "icon"
 # },
-FAVICONS = [{"href": "/static/assets/images/favicon.png"}]
+FAVICONS = [{"href": "/static/assets/dataai/favicon.png"}]
 
 
 def _try_json_readversion(filepath: str) -> str | None:
@@ -287,14 +287,14 @@ AUTH_RATE_LIMIT = "5 per second"
 # GLOBALS FOR APP Builder
 # ------------------------------
 # Uncomment to setup Your App name
-APP_NAME = "Superset"
+# APP_NAME = "Superset"
 
 # Specify the App icon
-APP_ICON = "/static/assets/images/superset-logo-horiz.png"
+# APP_ICON = "/static/assets/images/superset-logo-horiz.png"
 
 # Specify where clicking the logo would take the user
 # e.g. setting it to '/' would take the user to '/superset/welcome/'
-LOGO_TARGET_PATH = None
+# LOGO_TARGET_PATH = None
 
 # Specify tooltip that should appear when hovering over the App Icon/Logo
 LOGO_TOOLTIP = ""
@@ -771,7 +771,7 @@ HTML_SANITIZATION = True
 #   }
 # }
 # Be careful when extending the default schema to avoid XSS attacks.
-HTML_SANITIZATION_SCHEMA_EXTENSIONS: dict[str, Any] = {}
+# HTML_SANITIZATION_SCHEMA_EXTENSIONS: dict[str, Any] = {}
 
 # Chrome allows up to 6 open connections per domain at a time. When there are more
 # than 6 slices in dashboard, a lot of time fetch requests are queued up and wait for
@@ -1691,8 +1691,32 @@ EXTRA_DYNAMIC_QUERY_FILTERS: ExtraDynamicQueryFilters = {}
 # -------------------------------------------------------------------
 # *                     DATAAI CUSTOM CONFIG                        *
 # -------------------------------------------------------------------
-INDEX_LINK = 'www.google.com'
-HOME_LINK = 'www.google.com'
+# Uncomment to setup Your App name
+APP_NAME = "DataAIReporting"
+
+# Specify the App icon
+APP_ICON = "/static/assets/dataai/favicon.png"
+
+# Specify where clicking the logo would take the user
+# e.g. setting it to '/' would take the user to '/superset/welcome/'
+LOGO_TARGET_PATH = "https://dataaisolutions.com"
+
+INDEX_LINK = 'superset/dashboard/1'
+HOME_LINK = 'superset/dashboard/1'
+
+HTML_SANITIZATION_SCHEMA_EXTENSIONS = {
+  "attributes": {
+    "*": ["style", "className"],
+    "iframe": ["frameborder", "width", "height", [
+        "src",
+        "http://172.188.96.246/superset/dashboard/1/"
+    ]]
+  },
+  "tagNames": ["style", "iframe", "audio"],
+}
+
+DEFAULT_FEATURE_FLAGS['DRILL_BY'] = True
+DEFAULT_FEATURE_FLAGS['HORIZONTAL_FILTER_BAR'] = True
 
 # -------------------------------------------------------------------
 # *                WARNING:  STOP EDITING  HERE                    *

@@ -119,3 +119,8 @@ admin-user:
 docker-build:
 # 	docker build -t dataai/superset:$(shell git log -n 1 --pretty=format:"%h") .
 	docker build -t dataai/superset:3.1.0_dev .
+
+git-push:
+	git add .
+	git commit -m "fast commit"
+	git push
