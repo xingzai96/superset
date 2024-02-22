@@ -1707,12 +1707,14 @@ HOME_LINK = '/superset/dashboard/home/?standalone=true&expand_filters=0'
 HTML_SANITIZATION_SCHEMA_EXTENSIONS = {
   "attributes": {
     "*": ["style", "className"],
+    "a": ["href"],
+    "img": ["src", "width", "height"],
     "iframe": ["frameborder", "width", "height", [
         "src",
         "http://172.188.96.246/superset/dashboard/1/"
     ]]
   },
-  "tagNames": ["style", "iframe", "audio"],
+  "tagNames": ["style", "iframe", "audio", "a", "img"],
 }
 
 DEFAULT_FEATURE_FLAGS['DRILL_BY'] = True
