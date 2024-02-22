@@ -1701,8 +1701,8 @@ APP_ICON = "https://dataaisolutions.com/assets/custom/img/logo.png"
 # e.g. setting it to '/' would take the user to '/superset/welcome/'
 LOGO_TARGET_PATH = "https://dataaisolutions.com"
 
-INDEX_LINK = '/superset/dashboard/home/?standalone=true'
-HOME_LINK = '/superset/dashboard/home/?standalone=true'
+INDEX_LINK = '/superset/dashboard/home/?standalone=true&expand_filters=0'
+HOME_LINK = '/superset/dashboard/home/?standalone=true&expand_filters=0'
 
 HTML_SANITIZATION_SCHEMA_EXTENSIONS = {
   "attributes": {
