@@ -1723,7 +1723,7 @@ DEFAULT_FEATURE_FLAGS['HORIZONTAL_FILTER_BAR'] = True
 # SESSION_COOKIE_HTTPONLY = False
 WTF_CSRF_ENABLED = True
 HTTP_HEADERS={"X-Frame-Options":"ALLOWALL"}
-TALISMAN_ENABLED = True
+TALISMAN_ENABLED = False
 ENABLE_CORS = True
 
 # -------------------------------------------------------------------
