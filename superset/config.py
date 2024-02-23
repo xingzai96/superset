@@ -1730,7 +1730,7 @@ CORS_OPTIONS = {
   'allow_headers': '*',
   "expose_headers": '*',
   'resources': '*',
-  'origins': ['*']
+  'origins': ['172.188.96.246']
 }
 # -------------------------------------------------------------------
 # *                WARNING:  STOP EDITING  HERE                    *
