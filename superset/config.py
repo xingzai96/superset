@@ -1738,7 +1738,7 @@ CORS_OPTIONS = {
          '/superset/fetch_datasource_metadata/'  # datasource metadata
 
     ],
-    'origins': ['http://172.188.96.246']
+    'origins': ['*', 'http://172.188.96.246']
 }
 SUPERSET_WEBSERVER_DOMAINS = None
 # -------------------------------------------------------------------
