@@ -1732,7 +1732,7 @@ CORS_OPTIONS = {
   'resources': '*',
   'origins': ['*', 'http://172.188.96.246']
 }
-SUPERSET_WEBSERVER_DOMAINS = ['superset-1.mydomain.com','superset-2.mydomain.com','superset-3.mydomain.com','superset-4.mydomain.com']
+SUPERSET_WEBSERVER_DOMAINS = None
 # -------------------------------------------------------------------
 # *                WARNING:  STOP EDITING  HERE                    *
 # -------------------------------------------------------------------
