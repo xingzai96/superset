@@ -778,7 +778,7 @@ HTML_SANITIZATION = True
 # next available socket. PR #5039 is trying to allow domain sharding for Superset,
 # and this feature will be enabled by configuration only (by default Superset
 # doesn't allow cross-domain request).
-SUPERSET_WEBSERVER_DOMAINS = None
+# SUPERSET_WEBSERVER_DOMAINS = None
 
 # Allowed format types for upload on Database view
 EXCEL_EXTENSIONS = {"xlsx", "xls"}
@@ -1730,8 +1730,9 @@ CORS_OPTIONS = {
   'allow_headers': '*',
   "expose_headers": '*',
   'resources': '*',
-  'origins': ['172.188.96.246']
+  'origins': ['172.188.96.246', '*']
 }
+SUPERSET_WEBSERVER_DOMAINS = ['172.188.96.246', '*']
 # -------------------------------------------------------------------
 # *                WARNING:  STOP EDITING  HERE                    *
 # -------------------------------------------------------------------
