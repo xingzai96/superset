@@ -1724,7 +1724,7 @@ DEFAULT_FEATURE_FLAGS['HORIZONTAL_FILTER_BAR'] = True
 WTF_CSRF_ENABLED = False
 HTTP_HEADERS = {"X-Frame-Options": "ALLOWALL"}
 TALISMAN_ENABLED = False
-NABLE_CORS = True
+ENABLE_CORS = True
 CORS_OPTIONS = {
   'supports_credentials': True,
   'allow_headers': '*',
