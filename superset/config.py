@@ -1721,10 +1721,10 @@ DEFAULT_FEATURE_FLAGS['DRILL_BY'] = True
 DEFAULT_FEATURE_FLAGS['HORIZONTAL_FILTER_BAR'] = True
 
 # SESSION_COOKIE_HTTPONLY = False
-WTF_CSRF_ENABLED = True
-HTTP_HEADERS={"X-Frame-Options":"ALLOWALL"}
+WTF_CSRF_ENABLED = False
+HTTP_HEADERS = {"X-Frame-Options": "ALLOWALL"}
 TALISMAN_ENABLED = False
-ENABLE_CORS = True
+ENABLE_CORS = False
 
 # -------------------------------------------------------------------
 # *                WARNING:  STOP EDITING  HERE                    *
