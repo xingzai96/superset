@@ -132,7 +132,8 @@ RUN --mount=target=/var/lib/apt/lists,type=cache \
 RUN --mount=type=bind,target=./requirements/base.txt,src=./requirements/base.txt \
     --mount=type=bind,target=./requirements/docker.txt,src=./requirements/docker.txt \
     --mount=type=cache,target=/root/.cache/pip \
-    pip install -r requirements/docker.txt
+    pip install -r requirements/docker.txt \
+    pip install apache-superset[cors]
 
 USER superset
 ######################################################################
