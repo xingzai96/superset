@@ -1728,15 +1728,15 @@ ENABLE_CORS = True
 CORS_OPTIONS = {
     'supports_credentials': True,
     'allow_headers': [
-        'X-CSRFToken', 'Content-Type', 'Origin', 'X-Requested-With', 'Accept',
+        'X-CSRFToken', 'Content-Type', 'Origin', 'X-Requested-With', 'Accept', '*'
     ],
     'resources': [
-         '/superset/csrf_token/' , # auth
+         '/superset/csrf_token/',  # auth
          '/api/v1/formData/',  # sliceId => formData
          '/superset/explore_json/*',  # legacy query API, formData => queryData
          '/api/v1/query/',  # new query API, queryContext => queryData
-         '/superset/fetch_datasource_metadata/'  # datasource metadata
-
+         '/superset/fetch_datasource_metadata/',  # datasource metadata
+         '*'
     ],
     'origins': ['*', 'http://172.188.96.246']
 }
