@@ -749,7 +749,7 @@ STORE_CACHE_KEYS_IN_METADATA_DB = False
 
 # CORS Options
 # ENABLE_CORS = False
-CORS_OPTIONS: dict[Any, Any] = {}
+# CORS_OPTIONS: dict[Any, Any] = {}
 
 # Sanitizes the HTML content used in markdowns to allow its rendering in a safe manner.
 # Disabling this option is not recommended for security reasons. If you wish to allow
@@ -1724,8 +1724,14 @@ DEFAULT_FEATURE_FLAGS['HORIZONTAL_FILTER_BAR'] = True
 WTF_CSRF_ENABLED = False
 HTTP_HEADERS = {"X-Frame-Options": "ALLOWALL"}
 TALISMAN_ENABLED = False
-ENABLE_CORS = False
-
+NABLE_CORS = True
+CORS_OPTIONS = {
+  'supports_credentials': True,
+  'allow_headers': '*',
+  "expose_headers": '*',
+  'resources': '*',
+  'origins': ['*']
+}
 # -------------------------------------------------------------------
 # *                WARNING:  STOP EDITING  HERE                    *
 # -------------------------------------------------------------------
