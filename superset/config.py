@@ -1724,22 +1724,23 @@ DEFAULT_FEATURE_FLAGS['HORIZONTAL_FILTER_BAR'] = True
 WTF_CSRF_ENABLED = True
 HTTP_HEADERS = {"X-Frame-Options": "ALLOWALL"}
 TALISMAN_ENABLED = False
-ENABLE_CORS = True
-CORS_OPTIONS = {
-    'supports_credentials': True,
-    'allow_headers': [
-        'X-CSRFToken', 'Content-Type', 'Origin', 'X-Requested-With', 'Accept', '*'
-    ],
-    'resources': [
-         '/superset/csrf_token/',  # auth
-         '/api/v1/formData/',  # sliceId => formData
-         '/superset/explore_json/*',  # legacy query API, formData => queryData
-         '/api/v1/query/',  # new query API, queryContext => queryData
-         '/superset/fetch_datasource_metadata/',  # datasource metadata
-         '*'
-    ],
-    'origins': ['*', 'http://172.188.96.246']
-}
+ENABLE_CORS = False
+CORS_OPTIONS: dict[Any, Any] = {}
+# CORS_OPTIONS = {
+#     'supports_credentials': True,
+#     'allow_headers': [
+#         'X-CSRFToken', 'Content-Type', 'Origin', 'X-Requested-With', 'Accept', '*'
+#     ],
+#     'resources': [
+#          '/superset/csrf_token/',  # auth
+#          '/api/v1/formData/',  # sliceId => formData
+#          '/superset/explore_json/*',  # legacy query API, formData => queryData
+#          '/api/v1/query/',  # new query API, queryContext => queryData
+#          '/superset/fetch_datasource_metadata/',  # datasource metadata
+#          '*'
+#     ],
+#     'origins': ['*', 'http://172.188.96.246']
+# }
 SUPERSET_WEBSERVER_DOMAINS = None
 # -------------------------------------------------------------------
 # *                WARNING:  STOP EDITING  HERE                    *
