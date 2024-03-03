@@ -995,3 +995,9 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
     @deprecated(new_target="/sqllab/history")
     def sqllab_history(self) -> FlaskResponse:
         return redirect("/sqllab/history")
+
+    @has_access
+    @event_logger.log_this
+    @expose("/custom_wb_manpower_schedule/")
+    def profile(self) -> FlaskResponse:
+        return self.render_template("superset/custom_wb_manpower_schedule.html")
