@@ -140,3 +140,4 @@ xlrd==2.0.1
 # setuptools
 sqlalchemy-bigquery
 pandas_gbq
+playwright
