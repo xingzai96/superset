@@ -184,7 +184,7 @@ def generate_download_headers(
 ) -> dict[str, Any]:
     filename = filename if filename else datetime.now().strftime("%Y%m%d_%H%M%S")
     content_disp = f"attachment; filename={filename}.{extension}"
-    headers = {"Content-Disposition": content_disp, "Access-Control-Allow-Origin": "*"}
+    headers = {"Content-Disposition": content_disp}
     return headers
 
 

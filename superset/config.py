@@ -88,6 +88,7 @@ else:
 VERSION_INFO_FILE = str(files("superset") / "static/version_info.json")
 PACKAGE_JSON_FILE = str(files("superset") / "static/assets/package.json")
 
+
 # Multiple favicons can be specified here. The "href" property
 # is mandatory, but "sizes," "type," and "rel" are optional.
 # For example:
@@ -530,10 +531,11 @@ SSH_TUNNEL_TIMEOUT_SEC = 10.0
 #: Timeout (seconds) for transport socket (``socket.settimeout``)
 SSH_TUNNEL_PACKET_TIMEOUT_SEC = 1.0
 
+
 # Feature flags may also be set via 'SUPERSET_FEATURE_' prefixed environment vars.
 DEFAULT_FEATURE_FLAGS.update(
     {
-        k[len("SUPERSET_FEATURE_"):]: parse_boolean_string(v)
+        k[len("SUPERSET_FEATURE_") :]: parse_boolean_string(v)
         for k, v in os.environ.items()
         if re.search(r"^SUPERSET_FEATURE_\w+", k)
     }
@@ -931,7 +933,6 @@ DASHBOARD_AUTO_REFRESH_INTERVALS = [
 # celery beat triggered it, see https://github.com/celery/celery/issues/6974 for details
 CELERY_BEAT_SCHEDULER_EXPIRES = timedelta(weeks=1)
 
-
 # Default celery config is to use SQLA as a broker, in a production setting
 # you'll want to use a proper broker as specified here:
 # https://docs.celeryq.dev/en/stable/getting-started/backends-and-brokers/index.html
@@ -1185,6 +1186,7 @@ BLUEPRINTS: list[Blueprint] = []
 # pylint: disable-next=unnecessary-lambda-assignment
 TRACKING_URL_TRANSFORMER = lambda url: url
 
+
 # customize the polling time of each engine
 DB_POLL_INTERVAL_SECONDS: dict[str, int] = {}
 
@@ -1343,7 +1345,7 @@ SLACK_PROXY = None
 # chrome:
 #   Requires: headless chrome
 #   Limitations: unable to generate screenshots of elements
-WEBDRIVER_TYPE = "firefox"
+WEBDRIVER_TYPE = "chrome"
 
 # Window size - this will impact the rendering of the data
 WEBDRIVER_WINDOW = {
@@ -1362,7 +1364,7 @@ WEBDRIVER_CONFIGURATION: dict[Any, Any] = {"service_log_path": "/dev/null"}
 
 # Additional args to be passed as arguments to the config object
 # Note: If using Chrome, you'll want to add the "--marionette" arg.
-WEBDRIVER_OPTION_ARGS = ["--headless"]
+WEBDRIVER_OPTION_ARGS = ["--headless", "--disable-web-security"]
 
 # The base URL to query for accessing the user interface
 WEBDRIVER_BASEURL = "http://0.0.0.0:8080/"
@@ -1528,6 +1530,7 @@ SSL_CERT_PATH: str | None = None
 # pylint: disable-next=unnecessary-lambda-assignment
 SQLA_TABLE_MUTATOR = lambda table: table
 
+
 # Global async query config options.
 # Requires GLOBAL_ASYNC_QUERIES feature flag to be enabled.
 GLOBAL_ASYNC_QUERY_MANAGER_CLASS = (
@@ -1684,6 +1687,7 @@ class ExtraDynamicQueryFilters(TypedDict, total=False):
 
 EXTRA_DYNAMIC_QUERY_FILTERS: ExtraDynamicQueryFilters = {}
 
+
 # -------------------------------------------------------------------
 # *                     DATAAI CUSTOM CONFIG                        *
 # -------------------------------------------------------------------
@@ -1701,16 +1705,16 @@ INDEX_LINK = '/superset/dashboard/home/?standalone=true&expand_filters=0'
 HOME_LINK = '/superset/dashboard/home/?standalone=true&expand_filters=0'
 
 HTML_SANITIZATION_SCHEMA_EXTENSIONS = {
-    "attributes": {
-        "*": ["style", "className"],
-        "a": ["href"],
-        "img": ["src", "width", "height"],
-        "iframe": ["frameborder", "width", "height", [
-            "src",
-            "http://172.188.96.246/superset/dashboard/1/"
-        ]]
-    },
-    "tagNames": ["style", "iframe", "audio", "a", "img"],
+  "attributes": {
+    "*": ["style", "className"],
+    "a": ["href"],
+    "img": ["src", "width", "height"],
+    "iframe": ["frameborder", "width", "height", [
+        "src",
+        "http://172.188.96.246/superset/dashboard/1/"
+    ]]
+  },
+  "tagNames": ["style", "iframe", "audio", "a", "img"],
 }
 
 DEFAULT_FEATURE_FLAGS['DRILL_BY'] = True
@@ -1720,28 +1724,8 @@ DEFAULT_FEATURE_FLAGS['HORIZONTAL_FILTER_BAR'] = True
 WTF_CSRF_ENABLED = True
 HTTP_HEADERS = {"X-Frame-Options": "ALLOWALL"}
 TALISMAN_ENABLED = False
-ENABLE_CORS = True
-CORS_OPTIONS = {
-    'supports_credentials': True,
-    'allow_headers': [
-        'X-CSRFToken', 'Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'Access-Control-Allow-Origin'
-    ],
-    'resources': [
-        '/superset/csrf_token/',
-        '/api/v1/formData/',
-        '/superset/explore_json/',
-        '/api/v1/query/',
-        '/superset/fetch_datasource_metadata/'
-        '/superset/explore_json/',
-        '/superset/log/',
-        '*'
-    ],
-    'origins': [
-        '172.188.96.246',
-        '172.188.96.246:80'
-        , '*'
-    ],
-}
+ENABLE_CORS = False
+CORS_OPTIONS: dict[Any, Any] = {}
 # CORS_OPTIONS = {
 #     'supports_credentials': True,
 #     'allow_headers': [
