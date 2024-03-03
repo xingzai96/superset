@@ -15,15 +15,6 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *
- *     <DownloadAsPdf
- *       text={pdfMenuItemTitle}
- *       addDangerToast={addDangerToast}
- *       dashboardTitle={dashboardTitle}
- *       logEvent={logEvent}
- *       {...rest}
- *     />
- *
  */
 import React from 'react';
 import { Menu } from 'src/components/Menu';
@@ -50,6 +41,13 @@ const DownloadMenuItems = (props: DownloadMenuItemProps) => {
 
   return (
     <Menu selectable={false}>
+      <DownloadAsPdf
+        text={pdfMenuItemTitle}
+        addDangerToast={addDangerToast}
+        dashboardTitle={dashboardTitle}
+        logEvent={logEvent}
+        {...rest}
+      />
       <DownloadAsImage
         text={imageMenuItemTitle}
         addDangerToast={addDangerToast}
