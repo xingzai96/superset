@@ -1733,7 +1733,8 @@ CORS_OPTIONS = {
         '/api/v1/query/',
         '/superset/fetch_datasource_metadata/'
         '/superset/explore_json/',
-        '/superset/log/'
+        '/superset/log/',
+        '*'
     ],
     'origins': [
         '172.188.96.246',
