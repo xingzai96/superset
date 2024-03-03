@@ -506,7 +506,7 @@ DEFAULT_FEATURE_FLAGS: dict[str, bool] = {
     # Set to True to replace Selenium with Playwright to execute reports and thumbnails.
     # Unlike Selenium, Playwright reports support deck.gl visualizations
     # Enabling this feature flag requires installing "playwright" pip package
-    "PLAYWRIGHT_REPORTS_AND_THUMBNAILS": False,
+    "PLAYWRIGHT_REPORTS_AND_THUMBNAILS": True,
 }
 
 # ------------------------------
