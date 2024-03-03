@@ -22,7 +22,7 @@ import DownloadAsImage from './DownloadAsImage';
 import DownloadAsPdf from './DownloadAsPdf';
 
 export interface DownloadMenuItemProps {
-  pdfMenuItemTitle: string;
+//   pdfMenuItemTitle: string;
   imageMenuItemTitle: string;
   addDangerToast: Function;
   dashboardTitle: string;
@@ -31,7 +31,7 @@ export interface DownloadMenuItemProps {
 
 const DownloadMenuItems = (props: DownloadMenuItemProps) => {
   const {
-    pdfMenuItemTitle,
+//     pdfMenuItemTitle,
     imageMenuItemTitle,
     addDangerToast,
     dashboardTitle,
@@ -42,7 +42,7 @@ const DownloadMenuItems = (props: DownloadMenuItemProps) => {
   return (
     <Menu selectable={false}>
       <DownloadAsPdf
-        text={pdfMenuItemTitle}
+//         text={pdfMenuItemTitle}
         addDangerToast={addDangerToast}
         dashboardTitle={dashboardTitle}
         logEvent={logEvent}
