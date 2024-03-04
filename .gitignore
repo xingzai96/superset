@@ -73,7 +73,7 @@ superset-frontend/**/lib/*
 superset-frontend/**/storybook-static/*
 yarn-error.log
 *.map
-*.min.js
+#*.min.js
 test-changelog.md
 *.tsbuildinfo
 
