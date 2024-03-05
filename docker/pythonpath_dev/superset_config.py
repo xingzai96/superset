@@ -48,10 +48,6 @@ SQLALCHEMY_DATABASE_URI = (
     f"{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_DB}"
 )
 
-SQLALCHEMY_BINDS = {
-    'dataaidb': 'postgresql://dataai_admin_superuser:DSKlgsgoivj09w38dfsl@172.188.96.246:5433/postgres'
-}
-
 SQLALCHEMY_EXAMPLES_URI = (
     f"{DATABASE_DIALECT}://"
     f"{EXAMPLES_USER}:{EXAMPLES_PASSWORD}@"
