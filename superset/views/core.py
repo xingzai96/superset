@@ -682,8 +682,8 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
             dash = cast(
                 Dashboard,
                 db.session.query(Dashboard)
-                .filter_by(id=int(save_to_dashboard_id))
-                .one(),
+                    .filter_by(id=int(save_to_dashboard_id))
+                    .one(),
             )
             # check edit dashboard permissions
             dash_overwrite_perm = security_manager.is_owner(dash)
@@ -776,8 +776,8 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
         elif table_name and db_name:
             table = (
                 session.query(SqlaTable)
-                .join(Database)
-                .filter(
+                    .join(Database)
+                    .filter(
                     Database.database_name == db_name
                     or SqlaTable.table_name == table_name
                 )
@@ -793,8 +793,8 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
                 )
             slices = (
                 session.query(Slice)
-                .filter_by(datasource_id=table.id, datasource_type=table.type)
-                .all()
+                    .filter_by(datasource_id=table.id, datasource_type=table.type)
+                    .all()
             )
 
         return json_success(
@@ -803,8 +803,8 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
                     {
                         "slice_id" if key == "chart_id" else key: value
                         for key, value in ChartWarmUpCacheCommand(
-                            slc, dashboard_id, extra_filters
-                        )
+                        slc, dashboard_id, extra_filters
+                    )
                         .run()
                         .items()
                     }
@@ -946,8 +946,8 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
 
         if welcome_dashboard_id := (
             db.session.query(UserAttribute.welcome_dashboard_id)
-            .filter_by(user_id=get_user_id())
-            .scalar()
+                .filter_by(user_id=get_user_id())
+                .scalar()
         ):
             return self.dashboard(dashboard_id_or_slug=str(welcome_dashboard_id))
 
@@ -1002,7 +1002,6 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
     def profile(self) -> FlaskResponse:
         return self.render_template("superset/custom_wb_manpower_schedule.html")
 
-
     @has_access
     @event_logger.log_this
     @expose("/get/table/manpower_schedule/", methods=['GET'])
@@ -1021,3 +1020,74 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
         ]
 
         return {"data": {'header': header, 'row': row}}
+
+    @has_access
+    @event_logger.log_this
+    @expose("/api/edit/manage/table/manpower_schedule/", methods=['DELETE', 'PUT', 'POST'])
+    def api_edit_manage_table_template(self):
+        template = 'manpower_schedule'
+        if request.method == 'DELETE':
+            del_id = None
+            for k, v in request.args.items():
+                if k.split('][')[-1][:-1] == 'DT_RowId':
+                    del_id = v
+                    break
+            # psql_run
+            print(
+                'select table_name from public.manage_table where "DT_RowId" = \'{row}\''.format(
+                    row=del_id
+                )
+            )
+            # row = cursor.fetchall()
+            # actions = [
+            #     f"delete from {template} where \"DT_RowId\" = '{del_id}'",
+            #     f"drop table {row[0][0]}"
+            # ]
+            # psql_run(actions)
+
+            return {'data': del_id}
+        if request.method == 'PUT':
+            output = {}
+            for k, v in request.form.items():
+                if k == 'action':
+                    continue
+                output[k.split('][')[-1][:-1]] = v
+            # psql_run
+            print(
+                'select table_name from public.manage_table where "DT_RowId" = \'{row}\''.format(
+                    row=output['DT_RowId']
+                )
+            )
+            # row = cursor.fetchall()
+            # actions = [
+            #     "update {template} set {set} where \"DT_RowId\" = '{row}'".format(
+            #         template=template,
+            #         set=','.join([f'"{k}" = \'{v}\'' for k, v in output.items() if
+            #                       k != 'DT_RowId']),
+            #         row=output['DT_RowId']
+            #     ),
+            #     "ALTER TABLE {old_table} RENAME TO {new_table};".format(
+            #         old_table=row[0][0], new_table=output['table_name'])
+            # ]
+            # psql_run(actions)
+            return {'data': [output]}
+        if request.method == 'POST':
+            output = {}
+            for k, v in request.form.items():
+                if k == 'action':
+                    continue
+                output[k.split('][')[-1][:-1]] = v
+            return_output = output.copy()
+            del output['DT_RowId']
+            actions = [
+                "insert into {template} ({column}) values ({values})".format(
+                    template=template,
+                    column=','.join([f'"{k}"' for k in output.keys()]),
+                    values=','.join([f"'{v}'" for v in output.values()])
+                ),
+                "create table public.{template} (\"DT_RowId\" bigserial)".format(
+                    template=output['table_name']
+                )
+            ]
+            print(actions)
+            return {'data': [return_output]}
