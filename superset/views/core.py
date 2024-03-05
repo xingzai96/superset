@@ -1001,3 +1001,23 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
     @expose("/custom_wb_manpower_schedule/")
     def profile(self) -> FlaskResponse:
         return self.render_template("superset/custom_wb_manpower_schedule.html")
+
+
+    @has_access
+    @event_logger.log_this
+    @expose("/get/table/manpower_schedule/", methods=['GET'])
+    def get_table_manage_template(self):
+        # cursor.execute(f"""
+        #     select "DT_RowId", column_name, column_type from public.manage_table_schema
+        #     where table_name = '{template}'
+        # """)
+        # header = ["DT_RowId", "column_name", "column_type"]
+        # row = [dict(zip(header, i)) for i in cursor.fetchall()]
+
+        header = ['DT_RowId', 'name', 'age']
+        row = [
+            {'DT_RowId': 1, 'name': "asd", 'age': 123},
+            {'DT_RowId': 2, 'name': "qwe", 'age': 234}
+        ]
+
+        return {"data": {'header': header, 'row': row}}
