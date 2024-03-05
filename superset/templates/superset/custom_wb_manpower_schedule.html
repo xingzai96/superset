@@ -76,7 +76,7 @@ var editor; // use a global for the submit and return data rendering in the exam
 
 $(document).ready(function() {
     var table_name = "manpower_schedule";
-    var target_call = "/get/table/" + table_name + "/"
+    var target_call = "/superset/get/table/" + table_name + "/"
 
     var table_schema;
     $.get(target_call, function(data, status){
@@ -101,15 +101,15 @@ $(document).ready(function() {
           ajax: {
               create: {
                   type: 'POST',
-                  url:  '/api/edit/custom/table/' + table_name
+                  url:  '/superset/api/edit/custom/table/' + table_name
               },
               edit: {
                   type: 'PUT',
-                  url:  '/api/edit/custom/table/' + table_name
+                  url:  '/superset/api/edit/custom/table/' + table_name
               },
               remove: {
                   type: 'DELETE',
-                  url:  '/api/edit/custom/table/' + table_name
+                  url:  '/superset/api/edit/custom/table/' + table_name
               }
           },
           table: "#example",
