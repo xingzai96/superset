@@ -1018,7 +1018,8 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
         sql_query = "SELECT * FROM manage_table"
         dataaidb_engine = db.get_engine(app, 'dataaidb')
         result = dataaidb_engine.execute(sql_query)
-        print(result)
+        for i in result:
+            print(i)
 
         header = ['DT_RowId', 'name', 'age']
         row = [
