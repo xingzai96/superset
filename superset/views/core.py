@@ -107,6 +107,8 @@ from superset.views.utils import (
     sanitize_datasource_data,
 )
 from superset.viz import BaseViz
+from flask_sqlalchemy import SQLAlchemy
+
 
 config = app.config
 SQLLAB_QUERY_COST_ESTIMATE_TIMEOUT = config["SQLLAB_QUERY_COST_ESTIMATE_TIMEOUT"]
@@ -1013,6 +1015,10 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
         # """)
         # header = ["DT_RowId", "column_name", "column_type"]
         # row = [dict(zip(header, i)) for i in cursor.fetchall()]
+        sql_query = "SELECT * FROM manage_table"
+        dataaidb_engine = db.get_engine(app, 'dataaidb')
+        result = dataaidb_engine.execute(sql_query)
+        print(result)
 
         header = ['DT_RowId', 'name', 'age']
         row = [
