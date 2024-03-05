@@ -23,6 +23,7 @@ from datetime import datetime
 from typing import Any, Callable, cast
 from urllib import parse
 import re
+import pandas as pd
 
 import simplejson as json
 from flask import abort, flash, g, redirect, render_template, request, Response
@@ -1015,19 +1016,38 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
         # """)
         # header = ["DT_RowId", "column_name", "column_type"]
         # row = [dict(zip(header, i)) for i in cursor.fetchall()]
-        sql_query = "SELECT * FROM manpower"
+
+        # sql_query = "SELECT * FROM manpower"
+        # dataaidb_engine = db.get_engine(app, 'dataaidb')
+        # result = dataaidb_engine.execute(sql_query)
+        # for i in result:
+        #     print(i)
+
         dataaidb_engine = db.get_engine(app, 'dataaidb')
-        result = dataaidb_engine.execute(sql_query)
-        for i in result:
-            print(i)
+        df = pd.read_sql_query("SELECT * FROM manpower", dataaidb_engine)
+        # print(tabulate(df, headers='keys', tablefmt='psql'))
 
-        header = ['DT_RowId', 'name', 'age']
-        row = [
-            {'DT_RowId': 1, 'name': "asd", 'age': 123},
-            {'DT_RowId': 2, 'name': "qwe", 'age': 234}
-        ]
 
-        return {"data": {'header': header, 'row': row}}
+        pivot_df = df.pivot_table(index=['Outlet', 'Employe ID', 'Name'], columns='Time', values='Status', aggfunc='first')
+        pivot_df.reset_index(inplace=True)
+
+        # Rename the columns
+        pivot_df.columns.name = None  # Remove the name for columns
+        pivot_df.columns = pivot_df.columns.str.upper()  # Convert column names to uppercase
+
+        # print(tabulate(pivot_df, headers='keys', tablefmt='psql'))
+
+        rec = pivot_df.to_dict(orient='records')
+
+        return {"data": {'header': list(pivot_df.columns), 'row': rec}}
+
+        # header = ['DT_RowId', 'name', 'age']
+        # row = [
+        #     {'DT_RowId': 1, 'name': "asd", 'age': 123},
+        #     {'DT_RowId': 2, 'name': "qwe", 'age': 234}
+        # ]
+        #
+        # return {"data": {'header': header, 'row': row}}
 
     @has_access
     @event_logger.log_this
