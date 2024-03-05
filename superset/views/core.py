@@ -1015,7 +1015,7 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
         # """)
         # header = ["DT_RowId", "column_name", "column_type"]
         # row = [dict(zip(header, i)) for i in cursor.fetchall()]
-        sql_query = "SELECT * FROM manage_table"
+        sql_query = "SELECT * FROM manpower"
         dataaidb_engine = db.get_engine(app, 'dataaidb')
         result = dataaidb_engine.execute(sql_query)
         for i in result:
