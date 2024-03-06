@@ -126,13 +126,6 @@ $(document).ready(function() {
 
       $('#example').DataTable( {
           dom: "Bfrtip",
-          columnDefs: [
-              {
-                  target: -1,
-                  visible: false,
-                  searchable: false
-              }
-          ],
           data: table_row,
           columns: datatable_column,
           select: true,
