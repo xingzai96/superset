@@ -126,9 +126,12 @@ $(document).ready(function() {
 
       $('#example').DataTable( {
           dom: "Bfrtip",
-          columns: datatable_column,
+          columns: [
+            { "data": "OUTLET" },
+            { "data": "NAME" },
+          ],
           data: table_row,
-          columnDefs: [],
+          columnDefs: [{ targets: '_all', visible: false }],
       } );
     });
 
