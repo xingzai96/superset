@@ -49,8 +49,8 @@ under the License.
         </div>
         <!-- Light table -->
         <div class="table-responsive">
-          <div id="example">
-          </div>
+          <table id="example">
+          </table>
         </div>
       </div>
     </div>
@@ -124,13 +124,12 @@ $(document).ready(function() {
       var table_row = data.data.row;
       console.log(table_row);
 
-<!--      $('#example').DataTable({-->
-<!--          dom: "Bfrtip",-->
-<!--          columns: datatable_column,-->
-<!--          data: table_row,-->
-<!--      } );-->
-
-      new DataTable('#example');
+      $('#example').DataTable( {
+          dom: "Bfrtip",
+          columns: datatable_column,
+          data: table_row,
+          columnDefs: [],
+      } );
     });
 
 
