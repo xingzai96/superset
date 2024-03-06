@@ -89,7 +89,7 @@ $(document).ready(function() {
       var table = document.getElementById("example");
       var header = table.createTHead();
       var row = header.insertRow(0);
-      for (var i=0; i<table_schema.length - 1 ; i++) {
+      for (var i=0; i<table_schema.length - 2 ; i++) {
         var th = document.createElement('th');
         th.innerHTML = table_schema[i];
         table.tHead.appendChild(th);
@@ -123,6 +123,8 @@ $(document).ready(function() {
 
       var table_row = data.data.row;
       console.log(table_row);
+
+      console.log(datatable_column)
 
       $('#example').DataTable( {
           dom: "Bfrtip",
