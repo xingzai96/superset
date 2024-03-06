@@ -1019,6 +1019,8 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
         # Rename the columns
         pivot_df.columns.name = None  # Remove the name for columns
         pivot_df.columns = pivot_df.columns.str.upper()  # Convert column names to uppercase
+        pivot_df['DT_RowId'] = pivot_df.index
+
         rec = pivot_df.to_dict(orient='records')
 
         return {"data": {'header': list(pivot_df.columns), 'row': rec}}
