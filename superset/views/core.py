@@ -1009,16 +1009,7 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
     @staticmethod
     def manpower_pivot(df, shift):
         df = df[['Outlet', 'Employe ID', 'Name'] + shift]
-        pivot_df = df.pivot_table(index=['Outlet', 'Employe ID', 'Name'], columns='Time', values='Status', aggfunc='first')
-        pivot_df.reset_index(inplace=True)
-
-        # Rename the columns
-        pivot_df.columns.name = None  # Remove the name for columns
-        pivot_df.columns = pivot_df.columns.str.upper()  # Convert column names to uppercase
-        pivot_df['DT_RowId'] = pivot_df.index
-        pivot_df = pivot_df.astype(str)
-
-        return pivot_df.to_dict(orient='records'), list(pivot_df.columns)
+        return df.to_dict(orient='records'), list(df.columns)
 
     @has_access
     @event_logger.log_this
@@ -1035,9 +1026,18 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
             dataaidb_engine = db.get_engine(app, 'dataaidb')
             df = pd.read_sql_query("SELECT * FROM manpower", dataaidb_engine)
 
-        m_pivot_rec, m_pivot_col = self.manpower_pivot(df, m_shift)
-        n_pivot_rec, n_pivot_col = self.manpower_pivot(df, n_shift)
-        e_pivot_rec, e_pivot_col = self.manpower_pivot(df, e_shift)
+        pivot_df = df.pivot_table(index=['Outlet', 'Employe ID', 'Name'], columns='Time', values='Status', aggfunc='first')
+        pivot_df.reset_index(inplace=True)
+
+        # Rename the columns
+        pivot_df.columns.name = None  # Remove the name for columns
+        pivot_df.columns = pivot_df.columns.str.upper()  # Convert column names to uppercase
+        pivot_df['DT_RowId'] = pivot_df.index
+        pivot_df = pivot_df.astype(str)
+
+        m_pivot_rec, m_pivot_col = self.manpower_pivot(pivot_df, m_shift)
+        n_pivot_rec, n_pivot_col = self.manpower_pivot(pivot_df, n_shift)
+        e_pivot_rec, e_pivot_col = self.manpower_pivot(pivot_df, e_shift)
 
         return {
             "data": {
