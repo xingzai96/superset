@@ -100,7 +100,7 @@ $(document).ready(function() {
         edit_datatable_column.push({"label": table_schema[i], "name": table_schema[i]});
       }
       console.log(edit_datatable_column)
-      editor = new $.fn.dataTable.Editor( {
+      editor = new DataTable.Editor( {
           ajax: {
               create: {
                   type: 'POST',
