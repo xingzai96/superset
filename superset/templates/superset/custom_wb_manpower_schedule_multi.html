@@ -55,6 +55,34 @@ under the License.
       </div>
     </div>
   </div>
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <!-- Card header -->
+        <div class="card-header border-0">
+        </div>
+        <h2>Noon Shift</h2>
+        <div class="table-responsive">
+          <table id="example2" class="table table-striped table-bordered align-items-center table-flush" style="width:100%">
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <!-- Card header -->
+        <div class="card-header border-0">
+        </div>
+        <h2>Evening Shift</h2>
+        <div class="table-responsive">
+          <table id="example3" class="table table-striped table-bordered align-items-center table-flush" style="width:100%">
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.6.3/papaparse.min.js"></script>
@@ -80,10 +108,10 @@ $(document).ready(function() {
 
     var table_schema;
     $.get(target_call, function(data, status){
-      var table_schema = data.data.header;
+      var table_schema = data.data.m_shift.header;
       console.log(table_schema);
 
-      var table_row = data.data.row;
+      var table_row = data.data.m_shift.row;
       console.log(table_row);
 
       var datatable_column = [];
@@ -137,9 +165,128 @@ $(document).ready(function() {
           columnDefs: [
               { targets: [-1], visible: false, searchable: false }
           ],
-          fixedColumns: {
-              start: 3
+      } );
+
+
+
+      var table_schema = data.data.n_shift.header;
+      console.log(table_schema);
+
+      var table_row = data.data.n_shift.row;
+      console.log(table_row);
+
+      var datatable_column = [];
+      var edit_datatable_column = [];
+
+      var table = document.getElementById("example2");
+      var header = table.createTHead();
+      var row = header.insertRow(0);
+      for (var i=0; i<table_schema.length ; i++) {
+        var th = document.createElement('th');
+        th.innerHTML = table_schema[i];
+        table.tHead.children[0].appendChild(th);
+        datatable_column.push({"data": table_schema[i]});
+        edit_datatable_column.push({"label": table_schema[i], "name": table_schema[i]});
+      }
+      console.log(edit_datatable_column)
+      editor = new $.fn.dataTable.Editor( {
+          ajax: {
+              create: {
+                  type: 'POST',
+                  url:  '/superset/api/edit/custom/table/' + table_name
+              },
+              edit: {
+                  type: 'PUT',
+                  url:  '/superset/api/edit/custom/table/' + table_name
+              },
+              remove: {
+                  type: 'DELETE',
+                  url:  '/superset/api/edit/custom/table/' + table_name
+              }
           },
+          table: "#example2",
+          fields: edit_datatable_column
+      } );
+
+      editor.on('initCreate', function() {
+          editor.show(); //Shows all fields
+          editor.hide('DT_RowId');
+      });
+
+      $('#example2').DataTable( {
+          dom: "Bfrtip",
+          data: table_row,
+          columns: datatable_column,
+          select: true,
+          buttons: [
+              { extend: "create", editor: editor },
+              { extend: "edit",   editor: editor },
+              { extend: "remove", editor: editor }
+          ],
+          columnDefs: [
+              { targets: [-1], visible: false, searchable: false }
+          ],
+      } );
+
+
+
+      var table_schema = data.data.e_shift.header;
+      console.log(table_schema);
+
+      var table_row = data.data.e_shift.row;
+      console.log(table_row);
+
+      var datatable_column = [];
+      var edit_datatable_column = [];
+
+      var table = document.getElementById("example3");
+      var header = table.createTHead();
+      var row = header.insertRow(0);
+      for (var i=0; i<table_schema.length ; i++) {
+        var th = document.createElement('th');
+        th.innerHTML = table_schema[i];
+        table.tHead.children[0].appendChild(th);
+        datatable_column.push({"data": table_schema[i]});
+        edit_datatable_column.push({"label": table_schema[i], "name": table_schema[i]});
+      }
+      console.log(edit_datatable_column)
+      editor = new $.fn.dataTable.Editor( {
+          ajax: {
+              create: {
+                  type: 'POST',
+                  url:  '/superset/api/edit/custom/table/' + table_name
+              },
+              edit: {
+                  type: 'PUT',
+                  url:  '/superset/api/edit/custom/table/' + table_name
+              },
+              remove: {
+                  type: 'DELETE',
+                  url:  '/superset/api/edit/custom/table/' + table_name
+              }
+          },
+          table: "#example3",
+          fields: edit_datatable_column
+      } );
+
+      editor.on('initCreate', function() {
+          editor.show(); //Shows all fields
+          editor.hide('DT_RowId');
+      });
+
+      $('#example3').DataTable( {
+          dom: "Bfrtip",
+          data: table_row,
+          columns: datatable_column,
+          select: true,
+          buttons: [
+              { extend: "create", editor: editor },
+              { extend: "edit",   editor: editor },
+              { extend: "remove", editor: editor }
+          ],
+          columnDefs: [
+              { targets: [-1], visible: false, searchable: false }
+          ],
       } );
     });
 
