@@ -133,7 +133,10 @@ $(document).ready(function() {
               { extend: "create", editor: editor },
               { extend: "edit",   editor: editor },
               { extend: "remove", editor: editor }
-          ]
+          ],
+          columnDefs: [
+              { targets: [-1], visible: false, searchable: false
+          },
       } );
     });
 
