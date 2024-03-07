@@ -1010,8 +1010,12 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
     @event_logger.log_this
     @expose("/get/table/manpower_schedule/", methods=['GET'])
     def get_table_manage_template(self):
-        dataaidb_engine = db.get_engine(app, 'dataaidb')
-        df = pd.read_sql_query("SELECT * FROM manpower", dataaidb_engine)
+        try:
+            dataaidb_engine = db.get_engine(app, 'dataaidb')
+            df = pd.read_sql_query("SELECT * FROM manpower", dataaidb_engine)
+        except:
+            dataaidb_engine = db.get_engine(app, 'dataaidb')
+            df = pd.read_sql_query("SELECT * FROM manpower", dataaidb_engine)
 
         pivot_df = df.pivot_table(index=['Outlet', 'Employe ID', 'Name'], columns='Time', values='Status', aggfunc='first')
         pivot_df.reset_index(inplace=True)
