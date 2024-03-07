@@ -1006,17 +1006,9 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
     def profile(self) -> FlaskResponse:
         return self.render_template("superset/custom_wb_manpower_schedule.html")
 
-    @has_access
-    @event_logger.log_this
-    @expose("/get/table/manpower_schedule/", methods=['GET'])
-    def get_table_manage_template(self):
-        try:
-            dataaidb_engine = db.get_engine(app, 'dataaidb')
-            df = pd.read_sql_query("SELECT * FROM manpower", dataaidb_engine)
-        except:
-            dataaidb_engine = db.get_engine(app, 'dataaidb')
-            df = pd.read_sql_query("SELECT * FROM manpower", dataaidb_engine)
-
+    @staticmethod
+    def manpower_pivot(df, shift):
+        df = df[['Outlet', 'Employe ID', 'Name'] + shift]
         pivot_df = df.pivot_table(index=['Outlet', 'Employe ID', 'Name'], columns='Time', values='Status', aggfunc='first')
         pivot_df.reset_index(inplace=True)
 
@@ -1026,9 +1018,43 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
         pivot_df['DT_RowId'] = pivot_df.index
         pivot_df = pivot_df.astype(str)
 
-        rec = pivot_df.to_dict(orient='records')
+        return pivot_df.to_dict(orient='records'), list(pivot_df.columns)
 
-        return {"data": {'header': list(pivot_df.columns), 'row': rec}}
+    @has_access
+    @event_logger.log_this
+    @expose("/get/table/manpower_schedule/", methods=['GET'])
+    def get_table_manage_template(self):
+        m_shift = ['08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30']
+        n_shift = ['13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30']
+        e_shift = ['18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00', '22:30']
+
+        try:
+            dataaidb_engine = db.get_engine(app, 'dataaidb')
+            df = pd.read_sql_query("SELECT * FROM manpower", dataaidb_engine)
+        except:
+            dataaidb_engine = db.get_engine(app, 'dataaidb')
+            df = pd.read_sql_query("SELECT * FROM manpower", dataaidb_engine)
+
+        m_pivot_rec, m_pivot_col = self.manpower_pivot(df, m_shift)
+        n_pivot_rec, n_pivot_col = self.manpower_pivot(df, n_shift)
+        e_pivot_rec, e_pivot_col = self.manpower_pivot(df, e_shift)
+
+        return {
+            "data": {
+                'm_shift': {
+                    'header': m_pivot_col,
+                    'row': m_pivot_rec
+                },
+                'n_shift': {
+                    'header': n_pivot_col,
+                    'row': n_pivot_rec
+                },
+                'e_shift': {
+                    'header': e_pivot_col,
+                    'row': e_pivot_rec
+                }
+            }
+        }
 
     @has_access
     @event_logger.log_this
