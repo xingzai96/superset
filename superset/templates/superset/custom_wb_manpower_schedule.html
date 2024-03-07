@@ -49,7 +49,7 @@ under the License.
         </div>
         <!-- Light table -->
         <div class="table-responsive">
-          <table id="example">
+          <table id="example" class="table table-striped table-bordered align-items-center table-flush" style="width:100%">
           </table>
         </div>
       </div>
@@ -89,7 +89,7 @@ $(document).ready(function() {
       var table = document.getElementById("example");
       var header = table.createTHead();
       var row = header.insertRow(0);
-      for (var i=0; i<table_schema.length ; i++) {
+      for (var i=0; i<table_schema.length - 1 ; i++) {
         var th = document.createElement('th');
         th.innerHTML = table_schema[i];
         table.tHead.children[0].appendChild(th);
@@ -126,12 +126,14 @@ $(document).ready(function() {
 
       $('#example').DataTable( {
           dom: "Bfrtip",
-          columns: [
-            { "data": "OUTLET" },
-            { "data": "NAME" },
-          ],
           data: table_row,
-          columnDefs: [{ targets: '_all', visible: true }],
+          columns: datatable_column,
+          select: true,
+          buttons: [
+              { extend: "create", editor: editor },
+              { extend: "edit",   editor: editor },
+              { extend: "remove", editor: editor }
+          ]
       } );
     });
 
