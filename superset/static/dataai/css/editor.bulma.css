@@ -1,3 +1,10 @@
+html.dark div.DTED_Lightbox_Close:after {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+html.dark div.DTED_Lightbox_Close:hover:after {
+  color: white !important;
+}
+
 div.DTE_Inline {
   position: relative;
   display: table;
@@ -94,7 +101,7 @@ div.DTE_Bubble div.DTE_Bubble_Liner {
   position: absolute;
   bottom: 0;
   border: 1px solid black;
-  width: 300px;
+  min-width: 300px;
   margin-left: -150px;
   background-color: white;
   box-shadow: 0 12px 30px 0 rgba(0, 0, 0, 0.5);
@@ -102,8 +109,6 @@ div.DTE_Bubble div.DTE_Bubble_Liner {
   border: 1px solid #666;
   padding: 1em;
   background: #fcfcfc;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 div.DTE_Bubble div.DTE_Bubble_Liner div.DTE_Bubble_Table {
@@ -125,6 +130,7 @@ div.DTE_Bubble div.DTE_Bubble_Liner div.DTE_Bubble_Table > form div.DTE_Form_Con
 }
 div.DTE_Bubble div.DTE_Bubble_Liner div.DTE_Bubble_Table > form div.DTE_Form_Content div.DTE_Field > div {
   padding: 0;
+  margin-top: 0.5em;
 }
 div.DTE_Bubble div.DTE_Bubble_Liner div.DTE_Bubble_Table > form div.DTE_Form_Content div.DTE_Field > div input {
   margin: 0;
@@ -142,7 +148,7 @@ div.DTE_Bubble div.DTE_Bubble_Liner div.DTE_Header {
 }
 div.DTE_Bubble div.DTE_Bubble_Liner div.DTE_Header + div.DTE_Form_Info,
 div.DTE_Bubble div.DTE_Bubble_Liner div.DTE_Header + div.DTE_Bubble_Table {
-  padding-top: 42px;
+  padding-top: 1em;
 }
 div.DTE_Bubble div.DTE_Bubble_Liner div.DTE_Form_Error {
   float: none;
@@ -156,6 +162,9 @@ div.DTE_Bubble div.DTE_Bubble_Liner div.DTE_Bubble_Close {
   right: 19px;
   cursor: pointer;
   z-index: 12;
+  top: 6px;
+  right: 6px;
+  line-height: 18px;
 }
 div.DTE_Bubble div.DTE_Bubble_Liner div.DTE_Bubble_Close:after {
   content: "×";
@@ -221,6 +230,22 @@ div.DTE_Bubble_Background > div {
 }
 div.DTE_Bubble_Background > div:not([dummy]) {
   filter: progid:DXImageTransform.Microsoft.gradient(enabled="false");
+}
+
+html.dark div.DTE_Bubble div.DTE_Bubble_Liner,
+html[data-bs-theme=dark] div.DTE_Bubble div.DTE_Bubble_Liner {
+  background-color: var(--dt-html-background);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+html.dark div.DTE_Bubble div.DTE_Bubble_Liner div.DTE_Bubble_Close::after,
+html[data-bs-theme=dark] div.DTE_Bubble div.DTE_Bubble_Liner div.DTE_Bubble_Close::after {
+  color: rgba(255, 255, 255, 0.5);
+}
+html.dark div.DTE_Bubble div.DTE_Bubble_Triangle,
+html[data-bs-theme=dark] div.DTE_Bubble div.DTE_Bubble_Triangle {
+  background-color: var(--dt-html-background);
+  border-left-color: rgba(255, 255, 255, 0.15);
+  border-bottom-color: rgba(255, 255, 255, 0.15);
 }
 
 div.DTE div.editor_upload {
@@ -332,6 +357,16 @@ div.DTE div.editor_upload.multi ul li button {
   margin-top: -1.5em;
 }
 
+html.dark div.DTE div.editor_upload div.drop,
+html[data-bs-theme=dark] div.DTE div.editor_upload div.drop {
+  border: 3px dashed rgba(255, 255, 255, 0.15);
+  color: inherit;
+}
+html.dark div.DTE div.editor_upload div.drop.over,
+html[data-bs-theme=dark] div.DTE div.editor_upload div.drop.over {
+  border: 3px dashed rgba(255, 255, 255, 0.5);
+}
+
 div.DTE div.DTE_Processing_Indicator {
   position: absolute;
   top: 17px;
@@ -413,6 +448,39 @@ div.DTE div.DTE_Processing_Indicator:after {
   }
 }
 
+html.dark div.DTE_Processing_Indicator span,
+html.dark div.DTE_Processing_Indicator:before,
+html.dark div.DTE_Processing_Indicator:after,
+html[data-bs-theme=dark] div.DTE_Processing_Indicator span,
+html[data-bs-theme=dark] div.DTE_Processing_Indicator:before,
+html[data-bs-theme=dark] div.DTE_Processing_Indicator:after {
+  display: block;
+  width: 0.5em;
+  height: 1.5em;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+table.dataTable tr.dte-highlight {
+  animation-duration: 1s;
+  animation-name: dte-highlight;
+}
+table.dataTable tr.dte-inlineAdd td,
+table.dataTable tr.dte-inlineAdd th {
+  vertical-align: top;
+}
+
+@keyframes dte-highlight {
+  from {
+    box-shadow: 0 0 0 rgb(235, 121, 15);
+  }
+  50% {
+    box-shadow: 0 0 5px rgb(235, 121, 15);
+  }
+  to {
+    box-shadow: 0 0 10px rgba(235, 121, 15, 0);
+  }
+}
 div.modal-content {
   padding: 20px;
   background: white;
@@ -424,8 +492,8 @@ div.modal-content div.modal-header {
 div.modal-content div.modal-footer {
   padding-top: 6px;
 }
-div.modal-content div.field.is-grouped {
-  display: none;
+div.modal-content div.dt-buttons {
+  margin-top: 1em;
 }
 div.modal-content div.dataTables_info {
   font-weight: 1;
@@ -438,7 +506,7 @@ div.modal-content div.dataTables_info span.select-item {
 
 div.DTE_Form_Buttons {
   display: flex;
-  flex-direction: row-reverse;
+  justify-content: flex-end;
   padding-top: 10px;
 }
 div.DTE_Form_Buttons button {
@@ -463,4 +531,35 @@ table.dataTable div.field input.is-small {
 div.DTE_Field_Type_checkbox div label,
 div.DTE_Field_Type_radio div label {
   margin-left: 0.75em;
+}
+
+div.DTE_Field_Type_datatable div.dt-search {
+  margin-top: 0.5em;
+}
+div.DTE_Field_Type_datatable div.dt-info,
+div.DTE_Field_Type_datatable div.dataTables_info {
+  margin-top: 0.5em;
+  text-align: left;
+  font-size: 0.8em;
+  line-height: 1.3em;
+  padding-right: 1em;
+  font-weight: normal;
+}
+div.DTE_Field_Type_datatable div.dt-info span.select-info,
+div.DTE_Field_Type_datatable div.dataTables_info span.select-info {
+  display: block;
+}
+div.DTE_Field_Type_datatable div.dt-buttons {
+  padding-bottom: 0.5em;
+  width: 100%;
+}
+div.DTE_Field_Type_datatable div.dt-buttons:empty {
+  display: none;
+}
+div.DTE_Field_Type_datatable div.column:empty {
+  display: none;
+}
+
+div.DTE_Bubble div.DTE_Bubble_Liner div.DTE_Header {
+  font-size: 18px;
 }
