@@ -1008,7 +1008,7 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     def manpower_pivot(df, shift):
-        df = df[['OUTLET', 'EMPLOYE ID', 'NAME'] + shift]
+        df = df[['OUTLET', 'EMPLOYE ID', 'NAME'] + shift + ['DT_RowId']]
         return df.to_dict(orient='records'), list(df.columns)
 
     @has_access
