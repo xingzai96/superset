@@ -1124,7 +1124,7 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
                 for key in keys:
                     row[key] = request.form[f"data[{i}][{key}]"]
                 result.append(row.copy())
-                del row['DT_RowId']
+                # del row['DT_RowId']
                 actions.append("insert into {template} ({column}) values {values}".format(
                     template=template,
                     column=','.join([f'"{k}"' for k in row.keys()]),
