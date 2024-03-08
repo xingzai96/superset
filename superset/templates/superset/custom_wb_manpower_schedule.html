@@ -122,8 +122,7 @@ $(document).ready(function() {
       } );
 
       editor.on('initCreate', function() {
-          editor.show(); //Shows all fields
-          editor.hide('DT_RowId');
+          editor.show('OUTLET'); //Shows all fields
       });
 
       $('#example').DataTable( {
