@@ -1115,7 +1115,7 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
                 if match:
                     index, name = match.groups()
                     keys.add(name)
-
+            print(request.form)
             # Create the list of dictionaries
             result = []
             actions = []
