@@ -62,6 +62,7 @@ under the License.
 <script src="https://cdn.datatables.net/2.0.2/js/dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/3.0.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/select/2.0.0/js/dataTables.select.min.js"></script>
+<script src="https://cdn.datatables.net/select/2.0.0/js/select.dataTables.js"></script>
 <script src="https://cdn.datatables.net/datetime/1.5.2/js/dataTables.dateTime.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
@@ -71,6 +72,7 @@ under the License.
 <script src="https://cdn.datatables.net/fixedcolumns/5.0.0/js/dataTables.fixedColumns.js"></script>
 <script src="https://cdn.datatables.net/fixedcolumns/5.0.0/js/fixedColumns.dataTables.js"></script>
 <script src="{{ assets_prefix }}/static/dataai/js/dataTables.editor.min.js"></script>
+<script src="{{ assets_prefix }}/static/dataai/js/editor.dataTables.min.js"></script>
 <script src="{{ assets_prefix }}/static/dataai/js/custom_wb_manpower_schedule.js"></script>
 
 <script defer>
@@ -103,11 +105,21 @@ $(document).ready(function() {
           var th = document.createElement('th');
           th.innerHTML = table_schema[i];
           table.tHead.children[0].appendChild(th);
-          datatable_column.push({"data": table_schema[i]});
+          datatable_column.push({"data": table_schema[i], "editField": "08:00"});
           if (table_id.includes(table_schema[i])){
             edit_datatable_column.push({"label": table_schema[i], "name": table_schema[i]});
           } else {
-            edit_datatable_column.push({"label": table_schema[i], "name": table_schema[i], "def":"O"});
+            edit_datatable_column.push({
+              "label": table_schema[i],
+              "name": table_schema[i],
+              "def":"O", "type":
+              "select",
+              options: [
+                  { label: 'Off', value: 'O' },
+                  { label: 'Work', value: 'W' },
+                  { label: 'Break', value: 'B' }
+              ]
+            });
           }
         }
         editor = new DataTable.Editor( {
@@ -123,11 +135,11 @@ $(document).ready(function() {
                 remove: {
                     type: 'POST',
                     url:  '/superset/api/edit/custom/table/' + table_name
-                }
+                },
             },
             table: "#example",
             fields: edit_datatable_column,
-            idSrc:  table_id[0]
+            idSrc:  table_id[0],
         } );
 
         editor_edit = editor
@@ -155,7 +167,7 @@ $(document).ready(function() {
             paging: false,
             scrollCollapse: true,
             scrollX: true,
-            scrollY: 300
+            scrollY: 300,
         } );
         console.log("done load")
       },
