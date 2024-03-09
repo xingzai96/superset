@@ -73,7 +73,7 @@ under the License.
 <script src="{{ assets_prefix }}/static/dataai/js/dataTables.editor.min.js"></script>
 <script src="{{ assets_prefix }}/static/dataai/js/custom_wb_manpower_schedule.js"></script>
 
-<script>
+<script defer>
 var editor; // use a global for the submit and return data rendering in the examples
 
 $(document).ready(function() {
@@ -81,75 +81,78 @@ $(document).ready(function() {
     var target_call = "/superset/get/table/" + table_name + "/"
 
     var table_schema;
-    $.get(target_call, function(data, status){
-      var table_schema = data.data.header;
-      console.log(table_schema);
 
-      var table_row = data.data.row;
-      console.log(table_row);
+    $.ajax({
+      url: target_call,
+      success: function(data) {
+        var table_schema = data.data.header;
+        console.log(table_schema);
 
-      var datatable_column = [];
-      var edit_datatable_column = [];
+        var table_row = data.data.row;
+        console.log(table_row);
 
-      var table = document.getElementById("example");
-      var header = table.createTHead();
-      var row = header.insertRow(0);
-      for (var i=0; i<table_schema.length ; i++) {
-        var th = document.createElement('th');
-        th.innerHTML = table_schema[i];
-        table.tHead.children[0].appendChild(th);
-        datatable_column.push({"data": table_schema[i]});
-        edit_datatable_column.push({"label": table_schema[i], "name": table_schema[i]});
-      }
-      console.log(edit_datatable_column)
-      editor_create = new DataTable.Editor( {
-          ajax: {
-              create: {
-                  type: 'POST',
-                  url:  '/superset/api/edit/custom/table/' + table_name
-              }
-          },
-          table: "#example",
-          fields: {"label": 'OUTLET', "name": 'OUTLET'}
-      } );
-      editor = new DataTable.Editor( {
-          ajax: {
-              edit: {
-                  type: 'PUT',
-                  url:  '/superset/api/edit/custom/table/' + table_name
-              },
-              remove: {
-                  type: 'DELETE',
-                  url:  '/superset/api/edit/custom/table/' + table_name
-              }
-          },
-          table: "#example",
-          fields: edit_datatable_column
-      } );
+        var datatable_column = [];
+        var edit_datatable_column = [];
 
-      $('#example').DataTable( {
-          dom: "Bfrtip",
-          data: table_row,
-          columns: datatable_column,
-          select: true,
-          buttons: [
-              { extend: "create", editor: editor_create },
-              { extend: "edit",   editor: editor },
-              { extend: "remove", editor: editor }
-          ],
-          columnDefs: [
-              { targets: [-1], visible: false, searchable: false }
-          ],
-          fixedColumns: {
-              start: 3
-          },
-          paging: false,
-          scrollCollapse: true,
-          scrollX: true,
-          scrollY: 300
-      } );
+        var table_id = ['Outlet','Employe ID','Name'];
+
+        var table = document.getElementById("example");
+        var header = table.createTHead();
+        var row = header.insertRow(0);
+        for (var i=0; i<table_schema.length ; i++) {
+          var th = document.createElement('th');
+          th.innerHTML = table_schema[i];
+          table.tHead.children[0].appendChild(th);
+          datatable_column.push({"data": table_schema[i]});
+          if (table_id.includes(table_schema[i])){
+            edit_datatable_column.push({"label": table_schema[i], "name": table_schema[i]});
+          } else {
+            edit_datatable_column.push({"label": table_schema[i], "name": table_schema[i], "def":"O"});
+          }
+        }
+        editor = new DataTable.Editor( {
+            ajax: {
+                create: {
+                    type: 'POST',
+                    url:  '/superset/api/edit/custom/table/' + table_name
+                },
+                edit: {
+                    type: 'POST',
+                    url:  '/superset/api/edit/custom/table/' + table_name
+                },
+                remove: {
+                    type: 'POST',
+                    url:  '/superset/api/edit/custom/table/' + table_name
+                }
+            },
+            table: "#example",
+            fields: edit_datatable_column,
+            idSrc:  table_id[0]
+        } );
+
+        $('#example').DataTable( {
+            dom: "Bfrtip",
+            data: table_row,
+            columns: datatable_column,
+            select: true,
+            buttons: [
+                { extend: "create", editor: editor },
+                { extend: "edit",   editor: editor },
+                { extend: "remove", editor: editor }
+            ],
+            fixedColumns: {
+                start: 3
+            },
+            paging: false,
+            scrollCollapse: true,
+            scrollX: true,
+            scrollY: 300
+        } );
+        console.log("done load")
+      },
+      timeout: 3000
     });
-
+    console.log("did it complete?")
 
 } );
 </script>
