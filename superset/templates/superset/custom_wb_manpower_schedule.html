@@ -130,6 +130,15 @@ $(document).ready(function() {
             idSrc:  table_id[0]
         } );
 
+        editor_edit = editor
+
+        editor_edit.on('initEdit', function( e, data ) {
+          editor_edit.show();
+          editor_edit.disable('Outlet');
+          editor_edit.disable('Employe ID');
+          editor_edit.disable('Name');
+        });
+
         $('#example').DataTable( {
             dom: "Bfrtip",
             data: table_row,
@@ -137,7 +146,7 @@ $(document).ready(function() {
             select: true,
             buttons: [
                 { extend: "create", editor: editor },
-                { extend: "edit",   editor: editor },
+                { extend: "edit",   editor: editor_edit },
                 { extend: "remove", editor: editor }
             ],
             fixedColumns: {
