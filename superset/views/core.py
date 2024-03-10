@@ -1132,7 +1132,6 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
                 value_name="Status"
             )  # revert pivot table to normal table
 
-            print(df)
             df.to_sql(table_name, con=dataaidb_engine, index=False, if_exists='append')
 
             return {'data': [row]}
