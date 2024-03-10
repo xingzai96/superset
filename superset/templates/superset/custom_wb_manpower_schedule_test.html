@@ -1,0 +1,130 @@
+{#
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+#}
+{% extends "appbuilder/base.html" %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.bootstrap5.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.1/css/buttons.bootstrap5.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/select/2.0.0/css/select.bootstrap5.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/datetime/1.5.2/css/dataTables.dateTime.min.css">
+<link rel="stylesheet" href="{{ assets_prefix }}/static/dataai/css/editor.bootstrap5.css">
+
+<table id="example" class="display" style="width:100%">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Office</th>
+            <th>Extn.</th>
+            <th>Start date</th>
+            <th>Salary</th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Office</th>
+            <th>Extn.</th>
+            <th>Start date</th>
+            <th>Salary</th>
+        </tr>
+    </tfoot>
+</table>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.0.2/js/dataTables.bootstrap5.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.bootstrap5.js"></script>
+<script src="https://cdn.datatables.net/select/2.0.0/js/dataTables.select.js"></script>
+<script src="https://cdn.datatables.net/select/2.0.0/js/select.bootstrap5.js"></script>
+<script src="https://cdn.datatables.net/datetime/1.5.2/js/dataTables.dateTime.min.js"></script>
+<script src="{{ assets_prefix }}/static/dataai/js/dataTables.editor.js"></script>
+<script src="{{ assets_prefix }}/static/dataai/js/editor.bootstrap5.js"></script>
+
+<script defer>
+var editor = new DataTable.Editor({
+    fields: [
+        {
+            label: 'First name:',
+            name: 'first_name'
+        },
+        {
+            label: 'Last name:',
+            name: 'last_name'
+        },
+        {
+            label: 'Position:',
+            name: 'position'
+        },
+        {
+            label: 'Office:',
+            name: 'office'
+        },
+        {
+            label: 'Extension:',
+            name: 'extn'
+        },
+        {
+            label: 'Start date:',
+            name: 'start_date',
+            type: 'datetime'
+        },
+        {
+            label: 'Salary:',
+            name: 'salary'
+        }
+    ],
+    table: '#example'
+});
+
+$('#example').DataTable({
+    columns: [
+        {
+            data: null,
+            render: function (data, type, row) {
+                // Combine the first and last names into a single table field
+                return data.first_name + ' ' + data.last_name;
+            }
+        },
+        { data: 'position' },
+        { data: 'office' },
+        { data: 'extn' },
+        { data: 'start_date' },
+        { data: 'salary', render: DataTable.render.number(null, null, 0, '$') }
+    ],
+    layout: {
+        topStart: {
+            buttons: [
+                { extend: 'create', editor: editor },
+                { extend: 'edit', editor: editor },
+                { extend: 'remove', editor: editor }
+            ]
+        }
+    },
+    select: true
+});
+</script>
+
+{% endblock %}
+
+{% block javascripts %}
+{% endblock javascripts %}

@@ -1006,6 +1006,12 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
     def custom_wb_manpower_schedule(self) -> FlaskResponse:
         return self.render_template("superset/custom_wb_manpower_schedule.html")
 
+    @has_access
+    @event_logger.log_this
+    @expose("/custom_wb_manpower_schedule_test/")
+    def custom_wb_manpower_schedule(self) -> FlaskResponse:
+        return self.render_template("superset/custom_wb_manpower_schedule_test.html")
+
     @staticmethod
     def manpower_pivot(df, shift):
         df = df[['OUTLET', 'EMPLOYE ID', 'NAME'] + shift + ['DT_RowId']]
