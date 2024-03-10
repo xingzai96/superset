@@ -180,6 +180,11 @@ under the License.
         var row = header.insertRow(0);
 
         if (init == 'update') {
+          datatable.clear();
+          datatable.rows.add(table_row);
+          $('#example').show();
+          $('#loading').hide();
+          datatable.draw();
         }
 
         if (init == 'new') {
@@ -189,7 +194,7 @@ under the License.
             th.innerHTML = column_schema[i].data;
             row.appendChild(th);
           }
-          
+
           editor = new DataTable.Editor({
             ajax: {
               create: {
