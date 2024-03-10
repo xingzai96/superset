@@ -173,6 +173,7 @@ under the License.
         'end_date': ed
       },
       success: function(data) {
+        console.log(data)
         var table_row = data.row;
         var table = document.getElementById("example");
         var header = table.createTHead();
