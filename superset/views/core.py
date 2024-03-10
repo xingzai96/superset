@@ -110,7 +110,6 @@ from superset.views.utils import (
 from superset.viz import BaseViz
 from flask_sqlalchemy import SQLAlchemy
 
-
 config = app.config
 SQLLAB_QUERY_COST_ESTIMATE_TIMEOUT = config["SQLLAB_QUERY_COST_ESTIMATE_TIMEOUT"]
 stats_logger = config["STATS_LOGGER"]
@@ -1008,9 +1007,9 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
 
     @has_access
     @event_logger.log_this
-    @expose("/custom_wb_manpower_schedule_test/")
-    def custom_wb_manpower_schedule_test(self) -> FlaskResponse:
-        return self.render_template("superset/custom_wb_manpower_schedule_test.html")
+    @expose("/custom_wb_sale_forecast/")
+    def custom_wb_sale_forecast(self) -> FlaskResponse:
+        return self.render_template("superset/custom_wb_sale_forecast.html")
 
     @staticmethod
     def manpower_pivot(df, shift):
@@ -1026,14 +1025,17 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
         date = request.args.get('date')
         try:
             dataaidb_engine = db.get_engine(app, 'dataaidb')
-            df = pd.read_sql_query(f"""SELECT * FROM manpower where "Outlet" = '{outlet}' and "Date" = '{date}'""", dataaidb_engine)
+            df = pd.read_sql_query(
+                f"""SELECT * FROM manpower where "Outlet" = '{outlet}' and "Date" = '{date}'""",
+                dataaidb_engine)
         except:
             dataaidb_engine = db.get_engine(app, 'dataaidb')
-            df = pd.read_sql_query(f"""SELECT * FROM manpower where "Outlet" = '{outlet}' and "Date" = '{date}'""", dataaidb_engine)
+            df = pd.read_sql_query(
+                f"""SELECT * FROM manpower where "Outlet" = '{outlet}' and "Date" = '{date}'""",
+                dataaidb_engine)
 
         pivot_df = df.pivot_table(index=['Date', 'Outlet', 'Employe ID', 'Name'],
                                   columns='Time', values='Status', aggfunc='first')
-
 
         pivot_df.reset_index(inplace=True)  # make pivoted index into column
 
@@ -1047,62 +1049,11 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
             }
         }
 
-    # def get_table_manage_template(self):
-    #     # m_shift = ['08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30']
-    #     # n_shift = ['13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30']
-    #     # e_shift = ['18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00', '22:30']
-    #
-    #     try:
-    #         dataaidb_engine = db.get_engine(app, 'dataaidb')
-    #         df = pd.read_sql_query("SELECT * FROM manpower", dataaidb_engine)
-    #     except:
-    #         dataaidb_engine = db.get_engine(app, 'dataaidb')
-    #         df = pd.read_sql_query("SELECT * FROM manpower", dataaidb_engine)
-    #
-    #     pivot_df = df.pivot_table(index=['Outlet', 'Employe ID', 'Name'], columns='Time', values='Status', aggfunc='first')
-    #     pivot_df.reset_index(inplace=True)
-    #
-    #     # Rename the columns
-    #     pivot_df.columns.name = None  # Remove the name for columns
-    #     pivot_df.columns = pivot_df.columns.str.upper()  # Convert column names to uppercase
-    #     pivot_df['DT_RowId'] = pivot_df.index
-    #     pivot_df = pivot_df.astype(str)
-    #
-    #     rec = pivot_df.to_dict(orient='records')
-    #
-    #     # m_pivot_rec, m_pivot_col = self.manpower_pivot(pivot_df, m_shift)
-    #     # n_pivot_rec, n_pivot_col = self.manpower_pivot(pivot_df, n_shift)
-    #     # e_pivot_rec, e_pivot_col = self.manpower_pivot(pivot_df, e_shift)
-    #
-    #     # return {
-    #     #     "data": {
-    #     #         'm_shift': {
-    #     #             'header': m_pivot_col,
-    #     #             'row': m_pivot_rec
-    #     #         },
-    #     #         'n_shift': {
-    #     #             'header': n_pivot_col,
-    #     #             'row': n_pivot_rec
-    #     #         },
-    #     #         'e_shift': {
-    #     #             'header': e_pivot_col,
-    #     #             'row': e_pivot_rec
-    #     #         }
-    #     #     }
-    #     # }
-    #
-    #     return {
-    #         "data": {
-    #             'header': list(pivot_df.columns),
-    #             'row': rec
-    #         }
-    #     }
-
-
     @has_access
     @event_logger.log_this
-    @expose("/api/edit/custom/table/manpower_schedule/", methods=['DELETE', 'PUT', 'POST'])
-    def api_edit_custom_table_template(self):
+    @expose("/api/edit/custom/table/manpower_schedule/",
+            methods=['DELETE', 'PUT', 'POST'])
+    def api_edit_custom_table_manpower_schedule(self):
         dataaidb_engine = db.get_engine(app, 'dataaidb')
         table_name = 'manpower'
         key_column = ['Date', 'Outlet', 'Employe ID', 'Name']
@@ -1172,69 +1123,73 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
 
             return {}
 
-    # def api_edit_custom_table_template(self):
-    #     template = 'manpower_schedule'
-    #     if request.method == 'DELETE':
-    #         del_id = None
-    #         for k, v in request.args.items():
-    #             if k.split('][')[-1][:-1] == 'DT_RowId':
-    #                 del_id = v
-    #                 break
-    #         action = f"delete from {template} where \"DT_RowId\" = '{del_id}'"
-    #         # psql_run
-    #         print(action)
-    #
-    #         return {'data': del_id}
-    #     if request.method == 'PUT':
-    #         output = {}
-    #         for k, v in request.form.items():
-    #             if k == 'action':
-    #                 continue
-    #             output[k.split('][')[-1][:-1]] = v
-    #
-    #         action = "update {template} set {set} where \"DT_RowId\" = '{row}'".format(
-    #             template=template,
-    #             set=','.join([f'"{k}" = \'{v}\'' for k, v in output.items() if k != 'DT_RowId']),
-    #             row=output['DT_RowId']
-    #         )
-    #         # psql_run
-    #         print(action)
-    #         return {'data': [output]}
-    #     if request.method == 'POST':
-    #         output = {}
-    #         # for k, v in request.form.items():
-    #         #     if k == 'action':
-    #         #         continue
-    #         #     output[k.split('][')[-1][:-1]] = v
-    #
-    #         # Regular expression pattern to match keys of the form 'data[n][key]'
-    #         pattern = re.compile(r'data\[(\d+)\]\[(\w+)\]')
-    #
-    #         # Extract the keys and values from the original dictionary
-    #         keys = set()
-    #         for key in request.form.keys():
-    #             match = pattern.match(key)
-    #             # print(match.groups())
-    #             if match:
-    #                 index, name = match.groups()
-    #                 keys.add(name)
-    #         print(request.form)
-    #         # Create the list of dictionaries
-    #         result = []
-    #         actions = []
-    #         for i in range(len(request.form) // len(keys)):
-    #             row = {}
-    #             for key in keys:
-    #                 row[key] = request.form[f"data[{i}][{key}]"]
-    #             result.append(row.copy())
-    #             # del row['DT_RowId']
-    #             actions.append("insert into {template} ({column}) values {values}".format(
-    #                 template=template,
-    #                 column=','.join([f'"{k}"' for k in row.keys()]),
-    #                 values='({})'.format(','.join([f"""'{v.replace("'", "''")}'""" for v in row.values()]))
-    #
-    #             ))
-    #         # psql_run
-    #         print(actions)
-    #         print({'data': result})
-    #         return {'data': result}
+    @has_access
+    @event_logger.log_this
+    @expose("/get/table/sale_forecast/", methods=['GET'])
+    def get_sale_forecast_table(self):
+        outlet = request.args.get('outlet')
+        start_date = request.args.get('start_date')
+        end_date = request.args.get('end_date')
+
+        # Retry once more in case error
+        try:
+            dataaidb_engine = db.get_engine(app, 'dataaidb')
+            df = pd.read_sql_query(
+                f"""
+                SELECT * FROM sale_forecast 
+                where outlet = '{outlet}' 
+                and forecast_date >= '{start_date}'
+                and forecast_date <= '{end_date}'
+                """, dataaidb_engine
+            )
+        except:
+            dataaidb_engine = db.get_engine(app, 'dataaidb')
+            df = pd.read_sql_query(
+                f"""
+                SELECT * FROM sale_forecast 
+                where outlet = '{outlet}' 
+                and forecast_date >= '{start_date}'
+                and forecast_date <= '{end_date}'
+                """, dataaidb_engine
+            )
+
+        row = df.to_dict(orient='records')
+
+        return {"data": row}
+
+    @has_access
+    @event_logger.log_this
+    @expose("/api/edit/custom/table/sale_forecast/",
+            methods=['DELETE', 'PUT', 'POST'])
+    def api_edit_custom_table_sale_forecast(self):
+        dataaidb_engine = db.get_engine(app, 'dataaidb')
+        table_name = 'manpower'
+        key_column = ['outlet', 'forecast_date']
+
+        request_form = dict(request.form)
+        action = request_form.popitem()  # Remove and retrieve last item (action item)
+
+        # Extract the keys and values from the original dictionary
+        pattern = r'\[(.*?)\]'  # Regular expression pattern to match keys of the form 'data[n][key]'
+        keys = set()
+        ids = set()
+        for key in request_form.keys():
+            matches = re.findall(pattern, key)
+            if matches:
+                ids.add(matches[0])
+                keys.add(matches[-1])
+
+        if action[1] == 'edit':
+            row = {key: request_form[f"data[{list(ids)[0]}][{key}]"] for key in keys}
+
+            update_statement = "update {} set {} where {}".format(
+                table_name,
+                ', '.join([f""""{k}" = '{v}'""" for k, v in row.items() if
+                           k not in key_column]),
+                ' and '.join(
+                    [f""""{i}" = '{row[i]}'""" for i in key_column])
+            )
+            print(update_statement)
+            dataaidb_engine.execute(update_statement)
+
+            return {'data': [row]}
