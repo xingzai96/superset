@@ -1158,8 +1158,9 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
                 and forecast_date <= '{end_date}'
                 """, dataaidb_engine
             )
-
+        print(df)
         row = df.to_dict(orient='records')
+        print(row)
 
         return {"data": row}
 
