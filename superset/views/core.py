@@ -1132,6 +1132,12 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
         end_date = request.args.get('end_date')
 
         # Retry once more in case error
+        print(f"""
+                SELECT * FROM sale_forecast 
+                where outlet = '{outlet}' 
+                and forecast_date >= '{start_date}'
+                and forecast_date <= '{end_date}'
+                """)
         try:
             dataaidb_engine = db.get_engine(app, 'dataaidb')
             df = pd.read_sql_query(
@@ -1185,7 +1191,7 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
             update_statement = "update {} set {} where {}".format(
                 table_name,
                 ', '.join([f""""{k}" = '{v}'""" for k, v in row.items() if
-                           k not in key_column]),
+                           k == 'planned_sales']),
                 ' and '.join(
                     [f""""{i}" = '{row[i]}'""" for i in key_column])
             )
