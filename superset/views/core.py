@@ -1105,7 +1105,7 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
     def api_edit_custom_table_template(self):
         dataaidb_engine = db.get_engine(app, 'dataaidb')
         table_name = 'manpower'
-        key_column = ['Outlet', 'Employe ID', 'Name']
+        key_column = ['Date', 'Outlet', 'Employe ID', 'Name']
 
         request_form = dict(request.form)
         action = request_form.popitem()  # Remove and retrieve last item (action item)
@@ -1132,6 +1132,7 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
                 value_name="Status"
             )  # revert pivot table to normal table
 
+            print(df)
             df.to_sql(table_name, con=dataaidb_engine, index=False, if_exists='append')
 
             return {'data': [row]}
@@ -1155,6 +1156,7 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
                     ' and '.join(
                         [f""""{i}" = '{r[i]}'""" for i in key_column + ['Time']])
                 )
+                print(update_statement)
                 dataaidb_engine.execute(update_statement)
 
             return {'data': [row]}
@@ -1166,6 +1168,7 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
                 table_name,
                 ' and '.join([f""""{i}" = '{row[i]}'""" for i in key_column])
             )
+            print(delete_statement)
             dataaidb_engine.execute(delete_statement)
 
             return {}
