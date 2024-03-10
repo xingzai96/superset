@@ -178,14 +178,18 @@ under the License.
         var table = document.getElementById("example");
         var header = table.createTHead();
         var row = header.insertRow(0);
-        for (var i = 0; i < column_schema.length; i++) {
-          var th = document.createElement('th');
-          th.innerHTML = column_schema[i].data;
-          row.appendChild(th);
-        }
+
         if (init == 'update') {
         }
+
         if (init == 'new') {
+
+          for (var i = 0; i < column_schema.length; i++) {
+            var th = document.createElement('th');
+            th.innerHTML = column_schema[i].data;
+            row.appendChild(th);
+          }
+          
           editor = new DataTable.Editor({
             ajax: {
               create: {
