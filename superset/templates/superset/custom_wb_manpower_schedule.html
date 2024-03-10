@@ -19,15 +19,13 @@ under the License.
 {% extends "appbuilder/base.html" %}
 
 {% block content %}
-<link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.1/css/buttons.dataTables.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/select/2.0.0/css/select.dataTables.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/datetime/1.5.2/css/dataTables.dateTime.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/5.0.0/css/fixedColumns.dataTables.css">
-<link rel="stylesheet" href="{{ assets_prefix }}/static/dataai/css/editor.dataTables.min.css">
-
-<h2><center>Welcome to Apache Superset: custom_wb_manpower_schedule</center></h2>
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.1/css/buttons.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/select/2.0.0/css/select.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/datetime/1.5.2/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/5.0.0/css/fixedColumns.bootstrap5.min.css">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/editor.bootstrap5.min.css') }}">
 <div class="header bg-primary pb-6">
   <div class="container-fluid">
     <div class="header-body">
@@ -39,143 +37,747 @@ under the License.
     </div>
   </div>
 </div>
-
+<div class="row align-items-center py-4">
+  <div class="col-lg-6 col-7"></div>
+</div>
+<div class="container col-sm-4">
+  <div class="row mb-3">
+    <div class="col-sm-4">
+      <label for="dropdown" class="form-label">Outlet:</label>
+      <select id="dropdown" class="form-select">
+        <option value="Sunway Velocity" selected>Sunway Velocity</option>
+        <option value="Mid Valley">Mid Valley</option>
+        <option value="1 Utama">1 Utama</option>
+        <option value="TRX">TRX</option>
+        <!-- Add more options as needed -->
+      </select>
+    </div>
+    <div class="col-sm-4">
+      <label for="date" class="form-label">Date:</label>
+      <input type="date" class="form-control" id="date" name="date" value="2024-03-11">
+    </div>
+    <div class="col-sm-4 d-flex align-items-end justify-content-end">
+      <button type="submit" class="btn btn-primary" onclick="submitFilter()">Submit</button>
+    </div>
+  </div>
+</div>
+<div class="row align-items-center py-4">
+  <div class="col-lg-6 col-7"></div>
+</div>
 <!-- Page content -->
-<div class="container-fluid mt--6">
+<div class="container-fluid col-sm-12">
   <div class="row">
     <div class="col">
       <div class="card">
         <!-- Card header -->
-        <div class="card-header border-0">
-        </div>
+        <div class="card-header border-0"></div>
         <div class="table-responsive">
-          <table id="example" class="table table-striped table-bordered align-items-center table-flush" style="width:100%">
-          </table>
+          <div id="loading">
+            <img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" alt="Loading..." width="50" height="50">
+          </div>
+          <table id="example" class="table table-striped table-bordered align-items-center table-flush" style="width:100%"></table>
         </div>
       </div>
     </div>
   </div>
 </div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.6.3/papaparse.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.datatables.net/2.0.2/js/dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.2/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/3.0.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.bootstrap5.min.js"></script>
 <script src="https://cdn.datatables.net/select/2.0.0/js/dataTables.select.min.js"></script>
-<script src="https://cdn.datatables.net/select/2.0.0/js/select.dataTables.js"></script>
+<script src="https://cdn.datatables.net/select/2.0.0/js/select.bootstrap5.min.js"></script>
 <script src="https://cdn.datatables.net/datetime/1.5.2/js/dataTables.dateTime.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.print.min.js"></script>
-<script src="https://cdn.datatables.net/fixedcolumns/5.0.0/js/dataTables.fixedColumns.js"></script>
-<script src="https://cdn.datatables.net/fixedcolumns/5.0.0/js/fixedColumns.dataTables.js"></script>
-<script src="{{ assets_prefix }}/static/dataai/js/dataTables.editor.min.js"></script>
-<script src="{{ assets_prefix }}/static/dataai/js/editor.dataTables.min.js"></script>
-<script src="{{ assets_prefix }}/static/dataai/js/custom_wb_manpower_schedule.js"></script>
-
+<script src="https://cdn.datatables.net/fixedcolumns/5.0.0/js/dataTables.fixedColumns.min.js"></script>
+<script src="https://cdn.datatables.net/fixedcolumns/5.0.0/js/fixedColumns.bootstrap5.min.js"></script>
+<script src="/static/dataai/js/dataTables.editor.min.js"></script>
+<script src="/static/dataai/js/editor.bootstrap5.min.js"></script>
+<script src="/static/dataai/js/custom_wb_manpower_schedule.js"></script>
 <script defer>
-var editor; // use a global for the submit and return data rendering in the examples
+  var editor; // use a global for the submit and return data rendering in the examples
+  var datatable;
+  var table_name = "manpower_schedule";
+  var target_call = "/superset/get/table/" + table_name + "/"
+  var dateValue = '2024-03-11'
+  var outlet_value = "Sunway Velocity";
+  var table_id = ['Date', 'Outlet', 'Employe ID', 'Name'];
+  var outlets = ["Sunway Velocity", "1 Utama", "Mid Valley", "TRX"]
+  var column_schema = [{
+    "label": "Date",
+    "data": "Date",
+    "name": "Date",
+    "def": function () {return dateValue},
+    "attr": { "disabled": true }
+  },{
+    "label": "Outlet",
+    "data": "Outlet",
+    "name": "Outlet",
+    "def": function () {return outlet_value},
+    "attr": { "disabled": true }
+  }, {
+    "label": "Employe ID",
+    "data": "Employe ID",
+    "name": "Employe ID"
+  }, {
+    "label": "Name",
+    "data": "Name",
+    "name": "Name"
+  }, {
+    "label": "08:00",
+    "data": "08:00",
+    "name": "08:00",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "08:30",
+    "data": "08:30",
+    "name": "08:30",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "09:00",
+    "data": "09:00",
+    "name": "09:00",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "09:30",
+    "data": "09:30",
+    "name": "09:30",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "10:00",
+    "data": "10:00",
+    "name": "10:00",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "10:30",
+    "data": "10:30",
+    "name": "10:30",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "11:00",
+    "data": "11:00",
+    "name": "11:00",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "11:30",
+    "data": "11:30",
+    "name": "11:30",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "12:00",
+    "data": "12:00",
+    "name": "12:00",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "12:30",
+    "data": "12:30",
+    "name": "12:30",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "13:00",
+    "data": "13:00",
+    "name": "13:00",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "13:30",
+    "data": "13:30",
+    "name": "13:30",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "14:00",
+    "data": "14:00",
+    "name": "14:00",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "14:30",
+    "data": "14:30",
+    "name": "14:30",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "15:00",
+    "data": "15:00",
+    "name": "15:00",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "15:30",
+    "data": "15:30",
+    "name": "15:30",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "16:00",
+    "data": "16:00",
+    "name": "16:00",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "16:30",
+    "data": "16:30",
+    "name": "16:30",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "17:00",
+    "data": "17:00",
+    "name": "17:00",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "17:30",
+    "data": "17:30",
+    "name": "17:30",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "18:00",
+    "data": "18:00",
+    "name": "18:00",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "18:30",
+    "data": "18:30",
+    "name": "18:30",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "19:00",
+    "data": "19:00",
+    "name": "19:00",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "19:30",
+    "data": "19:30",
+    "name": "19:30",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "20:00",
+    "data": "20:00",
+    "name": "20:00",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "20:30",
+    "data": "20:30",
+    "name": "20:30",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "21:00",
+    "data": "21:00",
+    "name": "21:00",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "21:30",
+    "data": "21:30",
+    "name": "21:30",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "22:00",
+    "data": "22:00",
+    "name": "22:00",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }, {
+    "label": "22:30",
+    "data": "22:30",
+    "name": "22:30",
+    "def": "O",
+    "type": "select",
+    "defaultContent": 'O',
+    "options": [{
+      "label": "Off",
+      "value": "O"
+    }, {
+      "label": "Work",
+      "value": "W"
+    }, {
+      "label": "Break",
+      "value": "B"
+    }]
+  }]
 
-$(document).ready(function() {
-    var table_name = "manpower_schedule";
-    var target_call = "/superset/get/table/" + table_name + "/"
+  function submitFilter() {
+    outlet_value = document.getElementById('dropdown').value;
+    dateValue = document.getElementById('date').value;
+    fetchData(outlet_value, dateValue, 'update');
+  }
 
-    var table_schema;
-
+  function fetchData(o, d, i) {
+    var init = i;
+    $('#example').hide();
+    $('#loading').show();
     $.ajax({
       url: target_call,
+      data: {
+        'outlet': o,
+        'date': d
+      },
       success: function(data) {
-        var table_schema = data.data.header;
-        console.log(table_schema);
-
         var table_row = data.data.row;
-        console.log(table_row);
-
-        var datatable_column = [];
-        var edit_datatable_column = [];
-
-        var table_id = ['Outlet','Employe ID','Name'];
-
         var table = document.getElementById("example");
         var header = table.createTHead();
         var row = header.insertRow(0);
-        for (var i=0; i<table_schema.length ; i++) {
+        for (var i = 0; i < column_schema.length; i++) {
           var th = document.createElement('th');
-          th.innerHTML = table_schema[i];
-          table.tHead.children[0].appendChild(th);
-          datatable_column.push({"data": table_schema[i], "editField": "08:00"});
-          if (table_id.includes(table_schema[i])){
-            edit_datatable_column.push({"label": table_schema[i], "name": table_schema[i]});
-          } else {
-            edit_datatable_column.push({
-              "label": table_schema[i],
-              "name": table_schema[i],
-              "def":"O", "type":
-              "select",
-              options: [
-                  { label: 'Off', value: 'O' },
-                  { label: 'Work', value: 'W' },
-                  { label: 'Break', value: 'B' }
-              ]
-            });
-          }
+          th.innerHTML = column_schema[i].data;
+          row.appendChild(th);
         }
-        editor = new DataTable.Editor( {
+        if (init == 'update') {
+          datatable.clear();
+          datatable.rows.add(table_row);
+          $('#example').show();
+          $('#loading').hide();
+          datatable.draw();
+        }
+        if (init == 'new') {
+          editor = new DataTable.Editor({
             ajax: {
-                create: {
-                    type: 'POST',
-                    url:  '/superset/api/edit/custom/table/' + table_name
-                },
-                edit: {
-                    type: 'POST',
-                    url:  '/superset/api/edit/custom/table/' + table_name
-                },
-                remove: {
-                    type: 'POST',
-                    url:  '/superset/api/edit/custom/table/' + table_name
-                },
+              create: {
+                type: 'POST',
+                url: '/superset/api/edit/custom/table/' + table_name
+              },
+              edit: {
+                type: 'POST',
+                url: '/superset/api/edit/custom/table/' + table_name
+              },
+              remove: {
+                type: 'POST',
+                url: '/superset/api/edit/custom/table/' + table_name
+              },
             },
             table: "#example",
-            fields: edit_datatable_column,
-            idSrc:  table_id[0],
-        } );
+            fields: column_schema,
+            idSrc: table_id[0],
+          });
 
-        editor_edit = editor
+          editor_edit = new DataTable.Editor({
+            ajax: {
+              create: {
+                type: 'POST',
+                url: '/superset/api/edit/custom/table/' + table_name
+              },
+              edit: {
+                type: 'POST',
+                url: '/superset/api/edit/custom/table/' + table_name
+              },
+              remove: {
+                type: 'POST',
+                url: '/superset/api/edit/custom/table/' + table_name
+              },
+            },
+            table: "#example",
+            fields: column_schema,
+            idSrc: table_id[0],
+          });
 
-        editor_edit.on('initEdit', function( e, data ) {
-          editor_edit.show();
-          editor_edit.disable('Outlet');
-          editor_edit.disable('Employe ID');
-          editor_edit.disable('Name');
-        });
+          editor_edit.on('initEdit', function(e, data) {
+            editor_edit.show();
+            editor_edit.disable('Employe ID');
+            editor_edit.disable('Name');
+          });
 
-        $('#example').DataTable( {
+          $('#example').show();
+          $('#loading').hide();
+          datatable = $('#example').DataTable({
             dom: "Bfrtip",
             data: table_row,
-            columns: datatable_column,
+            columns: column_schema,
             select: true,
-            buttons: [
-                { extend: "create", editor: editor },
-                { extend: "edit",   editor: editor_edit },
-                { extend: "remove", editor: editor }
-            ],
+            buttons: [{
+              extend: "create",
+              editor: editor
+            }, {
+              extend: "edit",
+              editor: editor_edit
+            }, {
+              extend: "remove",
+              editor: editor
+            }],
             fixedColumns: {
-                start: 3
+              start: 3
             },
             paging: false,
             scrollCollapse: true,
             scrollX: true,
             scrollY: 300,
-        } );
-        console.log("done load")
+            bFilter: false
+          });
+        }
       },
-      timeout: 3000
+      timeout: 2000,
+      tryCount: 0,
+      retryLimit: 3,
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+        if (textStatus == 'timeout') {
+          this.tryCount++;
+          console.log("retried: " + this.tryCount)
+          if (this.tryCount <= this.retryLimit) {
+            //try again
+            $.ajax(this);
+            return;
+          } else {
+            alert("Status: " + textStatus + "Error: " + errorThrown);
+          }
+          return;
+        }
+        if (xhr.status == 500) {
+          alert("Status: " + textStatus + "Error: " + errorThrown);
+        } else {
+          alert("Status: " + textStatus + "Error: " + errorThrown);
+        }
+      }
     });
-    console.log("did it complete?")
-
-} );
+  }
+  $(document).ready(function() {
+    fetchData(outlet_value, dateValue, 'new');
+    console.log("did it complete?");
+  });
 </script>
 
 {% endblock %}

@@ -1016,17 +1016,18 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
     @expose("/get/table/manpower_schedule/", methods=['GET'])
     def get_manpower_schedule_table(self):
         # Retry once in case connection issue
+        outlet = request.args.get('outlet')
+        date = request.args.get('date')
         try:
             dataaidb_engine = db.get_engine(app, 'dataaidb')
-            df = pd.read_sql_query("SELECT * FROM manpower", dataaidb_engine)
+            df = pd.read_sql_query(f"""SELECT * FROM manpower where "Outlet" = '{outlet}' and "Date" = '{date}'""", dataaidb_engine)
         except:
             dataaidb_engine = db.get_engine(app, 'dataaidb')
-            df = pd.read_sql_query("SELECT * FROM manpower", dataaidb_engine)
+            df = pd.read_sql_query(f"""SELECT * FROM manpower where "Outlet" = '{outlet}' and "Date" = '{date}'""", dataaidb_engine)
 
-        pivot_df = df.pivot_table(index=['Outlet', 'Employe ID', 'Name'],
+        pivot_df = df.pivot_table(index=['Date', 'Outlet', 'Employe ID', 'Name'],
                                   columns='Time', values='Status', aggfunc='first')
 
-        print(pivot_df)
 
         pivot_df.reset_index(inplace=True)  # make pivoted index into column
 
