@@ -173,7 +173,7 @@ under the License.
         'end_date': ed
       },
       success: function(data) {
-        var table_row = data.data.row;
+        var table_row = data.row;
         var table = document.getElementById("example");
         var header = table.createTHead();
         var row = header.insertRow(0);
@@ -212,6 +212,7 @@ under the License.
 
           $('#example').show();
           $('#loading').hide();
+
           datatable = $('#example').DataTable({
             dom: "Bfrtip",
             data: table_row,
