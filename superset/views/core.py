@@ -1158,9 +1158,8 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
                 and forecast_date <= '{end_date}'
                 """, dataaidb_engine
             )
-        print(df)
+
         row = df.to_dict(orient='records')
-        print(row)
 
         return {"data": row}
 
@@ -1170,7 +1169,7 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
             methods=['DELETE', 'PUT', 'POST'])
     def api_edit_custom_table_sale_forecast(self):
         dataaidb_engine = db.get_engine(app, 'dataaidb')
-        table_name = 'manpower'
+        table_name = 'sale_forecast'
         key_column = ['outlet', 'forecast_date']
 
         request_form = dict(request.form)
