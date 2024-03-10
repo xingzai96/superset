@@ -1009,7 +1009,7 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
     @has_access
     @event_logger.log_this
     @expose("/custom_wb_manpower_schedule_test/")
-    def custom_wb_manpower_schedule(self) -> FlaskResponse:
+    def custom_wb_manpower_schedule_test(self) -> FlaskResponse:
         return self.render_template("superset/custom_wb_manpower_schedule_test.html")
 
     @staticmethod
