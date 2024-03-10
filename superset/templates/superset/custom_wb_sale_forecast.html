@@ -174,7 +174,7 @@ under the License.
       },
       success: function(data) {
         console.log(data)
-        var table_row = data;
+        var table_row = data.data;
         var table = document.getElementById("example");
         var header = table.createTHead();
         var row = header.insertRow(0);
