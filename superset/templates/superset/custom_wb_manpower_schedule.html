@@ -42,20 +42,24 @@ under the License.
   <div class="col-lg-6 col-7"></div>
 </div>
 <div class="container col-sm-4">
-  <div class="row mb-3">
+  <div class="row mb-3" style="display:flex; align-items:center;">
     <div class="col-sm-4">
-      <label for="dropdown" class="form-label">Outlet:</label>
-      <select id="dropdown" class="form-select">
-        <option value="Sunway Velocity" selected>Sunway Velocity</option>
-        <option value="Mid Valley">Mid Valley</option>
-        <option value="1 Utama">1 Utama</option>
-        <option value="TRX">TRX</option>
-        <!-- Add more options as needed -->
-      </select>
+      <div class="form-group">
+        <label for="dropdown" class="form-label">Outlet:</label>
+        <select id="dropdown" class="form-control form-select">
+          <option value="Sunway Velocity" selected>Sunway Velocity</option>
+          <option value="Mid Valley">Mid Valley</option>
+          <option value="1 Utama">1 Utama</option>
+          <option value="TRX">TRX</option>
+          <!-- Add more options as needed -->
+        </select>
+      </div>
     </div>
     <div class="col-sm-4">
-      <label for="date" class="form-label">Date:</label>
-      <input type="date" class="form-control" id="date" name="date" value="2024-03-11">
+      <div class="form-group">
+        <label for="date" class="form-label">Date:</label>
+        <input type="date" class="form-control" id="date" name="date" value="2024-03-11">
+      </div>
     </div>
     <div class="col-sm-4 d-flex align-items-end justify-content-end">
       <button type="submit" class="btn btn-primary" onclick="submitFilter()">Submit</button>
