@@ -18,12 +18,12 @@ under the License.
 #}
 {% extends "appbuilder/base.html" %}
 {% block content %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.bootstrap5.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.1/css/buttons.bootstrap5.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/select/2.0.0/css/select.bootstrap5.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.bootstrap.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.1/css/buttons.bootstrap.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/select/2.0.0/css/select.bootstrap.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/datetime/1.5.2/css/dataTables.dateTime.min.css">
-<link rel="stylesheet" href="{{ assets_prefix }}/static/dataai/css/editor.bootstrap5.css">
+<link rel="stylesheet" href="{{ assets_prefix }}/static/dataai/css/editor.bootstrap.css">
 
 <table id="example" class="display" style="width:100%">
     <thead>
@@ -49,16 +49,16 @@ under the License.
 </table>
 
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
-<script src="https://cdn.datatables.net/2.0.2/js/dataTables.bootstrap5.js"></script>
+<script src="https://cdn.datatables.net/2.0.2/js/dataTables.bootstrap.js"></script>
 <script src="https://cdn.datatables.net/buttons/3.0.1/js/dataTables.buttons.js"></script>
-<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.bootstrap5.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.bootstrap.js"></script>
 <script src="https://cdn.datatables.net/select/2.0.0/js/dataTables.select.js"></script>
-<script src="https://cdn.datatables.net/select/2.0.0/js/select.bootstrap5.js"></script>
+<script src="https://cdn.datatables.net/select/2.0.0/js/select.bootstrap.js"></script>
 <script src="https://cdn.datatables.net/datetime/1.5.2/js/dataTables.dateTime.min.js"></script>
 <script src="{{ assets_prefix }}/static/dataai/js/dataTables.editor.js"></script>
-<script src="{{ assets_prefix }}/static/dataai/js/editor.bootstrap5.js"></script>
+<script src="{{ assets_prefix }}/static/dataai/js/editor.bootstrap.js"></script>
 
 <script defer>
 var editor = new DataTable.Editor({
