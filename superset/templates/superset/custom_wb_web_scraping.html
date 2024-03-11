@@ -155,10 +155,11 @@ under the License.
           data: table_row,
           columns: column_schema,
           select: true,
-          buttons: [{
-            extend: "edit",
-            editor: editor
-          }],
+          buttons: [
+            { extend: 'create', editor: editor },
+            { extend: 'edit', editor: editor },
+            { extend: 'remove', editor: editor }
+          ],
           bFilter: false
         });
 
