@@ -1711,9 +1711,9 @@ HTML_SANITIZATION_SCHEMA_EXTENSIONS = {
     "img": ["src", "width", "height"],
     "iframe": ["frameborder", "width", "height", [
         "src",
-        "http://172.188.96.246/superset/dashboard/1/",
         "http://172.188.96.246/superset/custom_wb_manpower_schedule/",
-        "http://172.188.96.246/superset/custom_wb_sale_forecast/"
+        "http://172.188.96.246/superset/custom_wb_sale_forecast/",
+        "http://172.188.96.246/superset/dashboard/1/",
     ]]
   },
   "tagNames": ["style", "iframe", "audio", "a", "img"],
