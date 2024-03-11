@@ -1237,8 +1237,8 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
             methods=['DELETE', 'PUT', 'POST'])
     def api_edit_custom_table_web_scraping(self):
         dataaidb_engine = db.get_engine(app, 'dataaidb')
-        table_name = 'sale_forecast'
-        key_column = ['outlet', 'forecast_date']
+        table_name = 'web_scraping'
+        key_column = ['url_id']
 
         request_form = dict(request.form)
         action = request_form.popitem()  # Remove and retrieve last item (action item)
@@ -1253,17 +1253,40 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
                 ids.add(matches[0])
                 keys.add(matches[-1])
 
+        if action[1] == 'create':
+            # Parse request form to key pair
+            row = {key: request_form[f"data[{list(ids)[0]}][{key}]"] for key in keys}
+
+            # Convert row to dataframe
+            df = pd.DataFrame([row])
+
+            df.to_sql(table_name, con=dataaidb_engine, index=False, if_exists='append')
+
+            return {'data': [row]}
+
         if action[1] == 'edit':
             row = {key: request_form[f"data[{list(ids)[0]}][{key}]"] for key in keys}
 
             update_statement = "update {} set {} where {}".format(
                 table_name,
                 ', '.join([f""""{k}" = '{v}'""" for k, v in row.items() if
-                           k == 'planned_sales']),
+                           k in key_column]),
                 ' and '.join(
                     [f""""{i}" = '{row[i]}'""" for i in key_column])
             )
             print(update_statement)
             dataaidb_engine.execute(update_statement)
+
+        if action[1] == 'remove':
+            row = {key: request_form[f"data[{list(ids)[0]}][{key}]"] for key in keys}
+
+            delete_statement = "delete from {} where {}".format(
+                table_name,
+                ' and '.join([f""""{i}" = '{row[i]}'""" for i in key_column])
+            )
+            print(delete_statement)
+            dataaidb_engine.execute(delete_statement)
+
+            return {}
 
             return {'data': [row]}
