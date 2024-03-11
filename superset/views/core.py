@@ -1270,12 +1270,14 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
             update_statement = "update {} set {} where {}".format(
                 table_name,
                 ', '.join([f""""{k}" = '{v}'""" for k, v in row.items() if
-                           k in key_column]),
+                           k not in key_column]),
                 ' and '.join(
                     [f""""{i}" = '{row[i]}'""" for i in key_column])
             )
             print(update_statement)
             dataaidb_engine.execute(update_statement)
+
+            return {'data': [row]}
 
         if action[1] == 'remove':
             row = {key: request_form[f"data[{list(ids)[0]}][{key}]"] for key in keys}
