@@ -1011,6 +1011,12 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
     def custom_wb_sale_forecast(self) -> FlaskResponse:
         return self.render_template("superset/custom_wb_sale_forecast.html")
 
+    @has_access
+    @event_logger.log_this
+    @expose("/custom_wb_sale_forecast/")
+    def custom_wb_sale_forecast(self) -> FlaskResponse:
+        return self.render_template("superset/custom_wb_web_scraping.html")
+
     @staticmethod
     def manpower_pivot(df, shift):
         df = df[['OUTLET', 'EMPLOYE ID', 'NAME'] + shift + ['DT_RowId']]
@@ -1168,6 +1174,68 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
     @expose("/api/edit/custom/table/sale_forecast/",
             methods=['DELETE', 'PUT', 'POST'])
     def api_edit_custom_table_sale_forecast(self):
+        dataaidb_engine = db.get_engine(app, 'dataaidb')
+        table_name = 'sale_forecast'
+        key_column = ['outlet', 'forecast_date']
+
+        request_form = dict(request.form)
+        action = request_form.popitem()  # Remove and retrieve last item (action item)
+
+        # Extract the keys and values from the original dictionary
+        pattern = r'\[(.*?)\]'  # Regular expression pattern to match keys of the form 'data[n][key]'
+        keys = set()
+        ids = set()
+        for key in request_form.keys():
+            matches = re.findall(pattern, key)
+            if matches:
+                ids.add(matches[0])
+                keys.add(matches[-1])
+
+        if action[1] == 'edit':
+            row = {key: request_form[f"data[{list(ids)[0]}][{key}]"] for key in keys}
+
+            update_statement = "update {} set {} where {}".format(
+                table_name,
+                ', '.join([f""""{k}" = '{v}'""" for k, v in row.items() if
+                           k == 'planned_sales']),
+                ' and '.join(
+                    [f""""{i}" = '{row[i]}'""" for i in key_column])
+            )
+            print(update_statement)
+            dataaidb_engine.execute(update_statement)
+
+            return {'data': [row]}
+
+
+    @has_access
+    @event_logger.log_this
+    @expose("/get/table/web_scraping/", methods=['GET'])
+    def get_web_scraping_table(self):
+
+        # Retry once more in case error
+        print(f"""
+                SELECT * FROM web_scraping 
+                """)
+        try:
+            dataaidb_engine = db.get_engine(app, 'dataaidb')
+            df = pd.read_sql_query(
+                f"""SELECT * FROM web_scraping""", dataaidb_engine
+            )
+        except:
+            dataaidb_engine = db.get_engine(app, 'dataaidb')
+            df = pd.read_sql_query(
+                f"""SELECT * FROM web_scraping""", dataaidb_engine
+            )
+
+        row = df.to_dict(orient='records')
+
+        return {"data": row}
+
+    @has_access
+    @event_logger.log_this
+    @expose("/api/edit/custom/table/web_scraping/",
+            methods=['DELETE', 'PUT', 'POST'])
+    def api_edit_custom_table_web_scraping(self):
         dataaidb_engine = db.get_engine(app, 'dataaidb')
         table_name = 'sale_forecast'
         key_column = ['outlet', 'forecast_date']
