@@ -1013,8 +1013,8 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
 
     @has_access
     @event_logger.log_this
-    @expose("/custom_wb_sale_forecast/")
-    def custom_wb_sale_forecast(self) -> FlaskResponse:
+    @expose("/custom_wb_web_scraping/")
+    def custom_wb_web_scraping(self) -> FlaskResponse:
         return self.render_template("superset/custom_wb_web_scraping.html")
 
     @staticmethod
