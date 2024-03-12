@@ -999,19 +999,19 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
     def sqllab_history(self) -> FlaskResponse:
         return redirect("/sqllab/history")
 
-    @has_access
+    @has_access_api
     @event_logger.log_this
     @expose("/custom_wb_manpower_schedule/")
     def custom_wb_manpower_schedule(self) -> FlaskResponse:
         return self.render_template("superset/custom_wb_manpower_schedule.html")
 
-    @has_access
+    @has_access_api
     @event_logger.log_this
     @expose("/custom_wb_sale_forecast/")
     def custom_wb_sale_forecast(self) -> FlaskResponse:
         return self.render_template("superset/custom_wb_sale_forecast.html")
 
-    @has_access
+    @has_access_api
     @event_logger.log_this
     @expose("/custom_wb_web_scraping/")
     def custom_wb_web_scraping(self) -> FlaskResponse:
@@ -1022,7 +1022,7 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
         df = df[['OUTLET', 'EMPLOYE ID', 'NAME'] + shift + ['DT_RowId']]
         return df.to_dict(orient='records'), list(df.columns)
 
-    @has_access
+    @has_access_api
     @event_logger.log_this
     @expose("/get/table/manpower_schedule/", methods=['GET'])
     def get_manpower_schedule_table(self):
@@ -1055,7 +1055,7 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
             }
         }
 
-    @has_access
+    @has_access_api
     @event_logger.log_this
     @expose("/api/edit/custom/table/manpower_schedule/",
             methods=['DELETE', 'PUT', 'POST'])
@@ -1129,7 +1129,7 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
 
             return {}
 
-    @has_access
+    @has_access_api
     @event_logger.log_this
     @expose("/get/table/sale_forecast/", methods=['GET'])
     def get_sale_forecast_table(self):
@@ -1169,7 +1169,7 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
 
         return {"data": row}
 
-    @has_access
+    @has_access_api
     @event_logger.log_this
     @expose("/api/edit/custom/table/sale_forecast/",
             methods=['DELETE', 'PUT', 'POST'])
@@ -1207,7 +1207,7 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
             return {'data': [row]}
 
 
-    @has_access
+    @has_access_api
     @event_logger.log_this
     @expose("/get/table/web_scraping/", methods=['GET'])
     def get_web_scraping_table(self):
@@ -1231,7 +1231,7 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
 
         return {"data": row}
 
-    @has_access
+    @has_access_api
     @event_logger.log_this
     @expose("/api/edit/custom/table/web_scraping/",
             methods=['DELETE', 'PUT', 'POST'])
@@ -1290,5 +1290,3 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
             dataaidb_engine.execute(delete_statement)
 
             return {}
-
-            return {'data': [row]}
