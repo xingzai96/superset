@@ -55,13 +55,13 @@ under the License.
     <div class="col-sm-4">
       <div class="form-group">
         <label for="start_date" class="form-label">Start Date:</label>
-        <input type="date" class="form-control" id="start_date" name="date" value="2024-03-01">
+        <input type="date" class="form-control" id="start_date" name="date" value="2024-03-04">
       </div>
     </div>
     <div class="col-sm-4">
       <div class="form-group">
         <label for="end_date" class="form-label">End Date:</label>
-        <input type="date" class="form-control" id="end_date" name="date" value="2024-03-07">
+        <input type="date" class="form-control" id="end_date" name="date" value="2024-03-10">
       </div>
     </div>
     <div class="col-sm-4 d-flex align-items-end justify-content-end">
@@ -115,8 +115,8 @@ under the License.
   var datatable;
   var table_name = "sale_forecast";
   var target_call = "/superset/get/table/" + table_name + "/"
-  var startDateValue = '2024-03-01'
-  var endDateValue = '2024-03-07'
+  var startDateValue = '2024-03-04'
+  var endDateValue = '2024-03-10'
   var outlet_value = "Sunway Velocity";
   var table_id = ['outlet'];
   var outlets = ["Sunway Velocity", "1 Utama", "Mid Valley", "TRX"]
@@ -224,7 +224,8 @@ under the License.
               extend: "edit",
               editor: editor
             }],
-            bFilter: false
+            bFilter: false,
+            aaSorting: [[2,'asc']]
           });
         }
       },

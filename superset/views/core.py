@@ -1137,18 +1137,11 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
         start_date = request.args.get('start_date')
         end_date = request.args.get('end_date')
 
-        # Retry once more in case error
-        print(f"""
-                SELECT * FROM sale_forecast 
-                where outlet = '{outlet}' 
-                and forecast_date >= '{start_date}'
-                and forecast_date <= '{end_date}'
-                """)
         try:
             dataaidb_engine = db.get_engine(app, 'dataaidb')
             df = pd.read_sql_query(
                 f"""
-                SELECT * FROM sale_forecast 
+                SELECT outlet, TO_CHAR(forecast_date, 'YYYY-MM-DD'), day_of_week, forecast_highlight, forecast_sales, planned_sales FROM sale_forecast 
                 where outlet = '{outlet}' 
                 and forecast_date >= '{start_date}'
                 and forecast_date <= '{end_date}'
@@ -1158,7 +1151,7 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
             dataaidb_engine = db.get_engine(app, 'dataaidb')
             df = pd.read_sql_query(
                 f"""
-                SELECT * FROM sale_forecast 
+                SELECT outlet, TO_CHAR(forecast_date, 'YYYY-MM-DD'), day_of_week, forecast_highlight, forecast_sales, planned_sales FROM sale_forecast 
                 where outlet = '{outlet}' 
                 and forecast_date >= '{start_date}'
                 and forecast_date <= '{end_date}'
