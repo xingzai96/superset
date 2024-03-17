@@ -163,6 +163,16 @@ under the License.
     "label": "status",
     "data": "status",
     "name": "status",
+    "options": [{
+      "label": "Pass",
+      "value": "Pass"
+    }, {
+      "label": "Attended",
+      "value": "Attended"
+    }, {
+      "label": "Not Reachable",
+      "value": "Not Reachable"
+    }
   }, {
     "label": "remarks",
     "data": "remarks",
@@ -239,7 +249,6 @@ under the License.
           $('#loading').hide();
 
           datatable = $('#example').DataTable({
-            dom: "Bfrtip",
             data: table_row,
             columns: column_schema,
             select: true,
