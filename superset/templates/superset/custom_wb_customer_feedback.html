@@ -172,7 +172,7 @@ under the License.
     }, {
       "label": "Not Reachable",
       "value": "Not Reachable"
-    }]
+    }
   }, {
     "label": "remarks",
     "data": "remarks",
@@ -249,6 +249,7 @@ under the License.
           $('#loading').hide();
 
           datatable = $('#example').DataTable({
+            dom: "Bfrtip",
             data: table_row,
             columns: column_schema,
             select: true,
@@ -257,6 +258,7 @@ under the License.
               editor: editor
             }],
             aaSorting: [[1,'asc']]
+            bFilter: false
           });
         }
       },
