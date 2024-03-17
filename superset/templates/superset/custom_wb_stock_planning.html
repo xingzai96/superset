@@ -29,9 +29,40 @@ under the License.
     <div class="header-body">
       <div class="row align-items-center py-4">
         <div class="col-lg-6 col-7">
-          <h6 id="table_name" class="h2 text-white d-inline-block mb-0">Google Review Setting</h6>
+          <h6 id="table_name" class="h2 text-white d-inline-block mb-0">Stock Planning</h6>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+<div class="container col-sm-8">
+  <div class="row mb-3" style="display:flex; align-items:center;">
+    <div class="col-sm-4">
+      <div class="form-group">
+        <label for="dropdown" class="form-label">Outlet:</label>
+        <select id="dropdown" class="form-control form-select">
+          <option value="Sunway Velocity" selected>Sunway Velocity</option>
+          <option value="Mid Valley">Mid Valley</option>
+          <option value="1 Utama">1 Utama</option>
+          <option value="TRX">TRX</option>
+          <!-- Add more options as needed -->
+        </select>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="form-group">
+        <label for="start_date" class="form-label">Start Date:</label>
+        <input type="date" class="form-control" id="start_date" name="date" value="2024-03-04">
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="form-group">
+        <label for="end_date" class="form-label">End Date:</label>
+        <input type="date" class="form-control" id="end_date" name="date" value="2024-03-10">
+      </div>
+    </div>
+    <div class="col-sm-4 d-flex align-items-end justify-content-end">
+      <button type="submit" class="btn btn-primary" onclick="submitFilter()">Filter</button>
     </div>
   </div>
 </div>
@@ -76,39 +107,93 @@ under the License.
 <script defer>
   var editor; // use a global for the submit and return data rendering in the examples
   var datatable;
-  var table_name = "web_scraping";
+  var table_name = "stock_planning";
   var target_call = "/superset/get/table/" + table_name + "/"
-  var table_id = ['url_id'];
+  var startDateValue = '2024-03-04'
+  var endDateValue = '2024-03-10'
+  var outlet_value = "Sunway Velocity";
+  var table_id = ['outlet'];
+  var outlets = ["Sunway Velocity", "1 Utama", "Mid Valley", "TRX"]
 
   var column_schema = [{
-    "label": "url_id",
-    "data": "url_id",
-    "name": "url_id"
-  }, {
-    "label": "location_name",
-    "data": "location_name",
-    "name": "location_name",
-  }, {
-    "label": "status",
-    "data": "status",
-    "name": "status",
-    "def": "New",
+    "label": "outlet",
+    "data": "outlet",
+    "name": "outlet",
     "attr": { "disabled": true }
   }, {
-    "label": "frequency",
-    "data": "frequency",
-    "name": "frequency",
+    "label": "planned_date",
+    "data": "planned_date",
+    "name": "planned_date",
+    "attr": { "disabled": true }
   }, {
-    "label": "url",
-    "data": "url",
-    "name": "url",
+    "label": "day_of_week",
+    "data": "day_of_week",
+    "name": "day_of_week",
+    "attr": { "disabled": true }
+  }, {
+    "label": "thigh_suggestion",
+    "data": "thigh_suggestion",
+    "name": "thigh_suggestion",
+    "def": 0,
+    "attr": { "disabled": true }
+  }, {
+    "label": "thigh_planned",
+    "data": "thigh_planned",
+    "name": "thigh_planned",
+    "def": 0,
+  }, {
+    "label": "drumstick_suggestion",
+    "data": "drumstick_suggestion",
+    "name": "drumstick_suggestion",
+    "def": 0,
+    "attr": { "disabled": true }
+  }, {
+    "label": "drumstick_planned",
+    "data": "drumstick_planned",
+    "name": "drumstick_planned",
+    "def": 0,
+  }, {
+    "label": "wings_suggestion",
+    "data": "wings_suggestion",
+    "name": "wings_suggestion",
+    "def": 0,
+    "attr": { "disabled": true }
+  }, {
+    "label": "wings_planned",
+    "data": "wings_planned",
+    "name": "wings_planned",
+    "def": 0,
+  }, {
+    "label": "fillet_suggestion",
+    "data": "fillet_suggestion",
+    "name": "fillet_suggestion",
+    "def": 0,
+    "attr": { "disabled": true }
+  }, {
+    "label": "fillet_planned",
+    "data": "fillet_planned",
+    "name": "fillet_planned",
+    "def": 0,
   }]
 
-  function fetchData() {
+  function submitFilter() {
+    outlet_value = document.getElementById('dropdown').value;
+    startDateValue = document.getElementById('start_date').value;
+    endDateValue = document.getElementById('end_date').value;
+    fetchData(outlet_value, startDateValue, endDateValue, 'update');
+  }
+
+  function fetchData(o, sd, ed, i) {
+    var init = i;
     $('#example').hide();
     $('#loading').show();
     $.ajax({
       url: target_call,
+      data: {
+        'outlet': o,
+        'start_date': sd,
+        'end_date': ed
+      },
       success: function(data) {
         console.log(data)
         var table_row = data.data;
@@ -116,48 +201,58 @@ under the License.
         var header = table.createTHead();
         var row = header.insertRow(0);
 
-        for (var i = 0; i < column_schema.length; i++) {
-          var th = document.createElement('th');
-          th.innerHTML = column_schema[i].data;
-          row.appendChild(th);
+        if (init == 'update') {
+          datatable.clear();
+          datatable.rows.add(table_row);
+          $('#example').show();
+          $('#loading').hide();
+          datatable.draw();
         }
 
-        editor = new DataTable.Editor({
-          ajax: {
-            create: {
-              type: 'POST',
-              url: '/superset/api/edit/custom/table/' + table_name
-            },
-            edit: {
-              type: 'POST',
-              url: '/superset/api/edit/custom/table/' + table_name
-            },
-            remove: {
-              type: 'POST',
-              url: '/superset/api/edit/custom/table/' + table_name
-            },
-          },
-          table: "#example",
-          fields: column_schema,
-          idSrc: table_id[0],
-        });
+        if (init == 'new') {
 
-        $('#example').show();
-        $('#loading').hide();
+          for (var i = 0; i < column_schema.length; i++) {
+            var th = document.createElement('th');
+            th.innerHTML = column_schema[i].data;
+            row.appendChild(th);
+          }
 
-        datatable = $('#example').DataTable({
-          dom: "Bfrtip",
-          data: table_row,
-          columns: column_schema,
-          select: true,
-          buttons: [
-            { extend: 'create', editor: editor },
-            { extend: 'edit', editor: editor },
-            { extend: 'remove', editor: editor }
-          ],
-          bFilter: false
-        });
+          editor = new DataTable.Editor({
+            ajax: {
+              create: {
+                type: 'POST',
+                url: '/superset/api/edit/custom/table/' + table_name
+              },
+              edit: {
+                type: 'POST',
+                url: '/superset/api/edit/custom/table/' + table_name
+              },
+              remove: {
+                type: 'POST',
+                url: '/superset/api/edit/custom/table/' + table_name
+              },
+            },
+            table: "#example",
+            fields: column_schema,
+            idSrc: table_id[0],
+          });
 
+          $('#example').show();
+          $('#loading').hide();
+
+          datatable = $('#example').DataTable({
+            dom: "Bfrtip",
+            data: table_row,
+            columns: column_schema,
+            select: true,
+            buttons: [{
+              extend: "edit",
+              editor: editor
+            }],
+            bFilter: false,
+            aaSorting: [[1,'asc']]
+          });
+        }
       },
       timeout: 2000,
       tryCount: 0,
@@ -184,7 +279,7 @@ under the License.
     });
   }
   $(document).ready(function() {
-    fetchData();
+    fetchData(outlet_value, startDateValue, endDateValue, 'new');
     console.log("did it complete?");
   });
 </script>
