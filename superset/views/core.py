@@ -1023,6 +1023,12 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
     def custom_wb_sale_forecast(self) -> FlaskResponse:
         return self.render_template("superset/custom_wb_stock_planning.html")
 
+    @has_access_api
+    @event_logger.log_this
+    @expose("/custom_wb_customer_feedback/")
+    def custom_wb_customer_feedback(self) -> FlaskResponse:
+        return self.render_template("superset/custom_wb_customer_feedback.html")
+
     @staticmethod
     def manpower_pivot(df, shift):
         df = df[['OUTLET', 'EMPLOYE ID', 'NAME'] + shift + ['DT_RowId']]
@@ -1352,6 +1358,76 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
                 table_name,
                 ', '.join([f""""{k}" = '{v}'""" for k, v in row.items() if
                            '_planned' in k]),
+                ' and '.join(
+                    [f""""{i}" = '{row[i]}'""" for i in key_column])
+            )
+            print(update_statement)
+            dataaidb_engine.execute(update_statement)
+
+            return {'data': [row]}
+
+    @has_access_api
+    @event_logger.log_this
+    @expose("/get/table/customer_feedback/", methods=['GET'])
+    def get_sale_customer_feedback(self):
+        outlet = request.args.get('outlet')
+        start_date = request.args.get('start_date')
+        end_date = request.args.get('end_date')
+
+        try:
+            dataaidb_engine = db.get_engine(app, 'dataaidb')
+            df = pd.read_sql_query(
+                f"""
+                SELECT "outlet", TO_CHAR("date", 'YYYY-MM-DD') as "date", "time", feedback, customer_name, email, contact, "source", assignee, status, remarks, proof_of_payment FROM public.customer_feedback
+                where outlet = '{outlet}' 
+                and "date" >= '{start_date}'
+                and "date" <= '{end_date}'
+                """, dataaidb_engine
+            )
+        except:
+            dataaidb_engine = db.get_engine(app, 'dataaidb')
+            df = pd.read_sql_query(
+                f"""
+                SELECT "outlet", TO_CHAR("date", 'YYYY-MM-DD') as "date", "time", feedback, customer_name, email, contact, "source", assignee, status, remarks, proof_of_payment FROM public.customer_feedback
+                where outlet = '{outlet}' 
+                and "date" >= '{start_date}'
+                and "date" <= '{end_date}'
+                """, dataaidb_engine
+            )
+
+        row = df.to_dict(orient='records')
+
+        return {"data": row}
+
+    @has_access_api
+    @event_logger.log_this
+    @expose("/api/edit/custom/table/customer_feedback/",
+            methods=['DELETE', 'PUT', 'POST'])
+    def api_edit_custom_table_customer_feedback(self):
+        dataaidb_engine = db.get_engine(app, 'dataaidb')
+        table_name = 'customer_feedback'
+        key_column = ['outlet', 'date', 'time']
+
+        request_form = dict(request.form)
+        action = request_form.popitem()  # Remove and retrieve last item (action item)
+
+        # Extract the keys and values from the original dictionary
+        pattern = r'\[(.*?)\]'  # Regular expression pattern to match keys of the form 'data[n][key]'
+        keys = set()
+        ids = set()
+        for key in request_form.keys():
+            matches = re.findall(pattern, key)
+            if matches:
+                ids.add(matches[0])
+                keys.add(matches[-1])
+
+        if action[1] == 'edit':
+            row = {key: request_form[f"data[{list(ids)[0]}][{key}]"] for key in keys}
+
+            update_statement = "update {} set {} where {}".format(
+                table_name,
+                ', '.join([f""""{k}" = '{v}'""" for k, v in row.items() if
+                           k in ['status', 'remarks']]),
                 ' and '.join(
                     [f""""{i}" = '{row[i]}'""" for i in key_column])
             )

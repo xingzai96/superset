@@ -1,0 +1,282 @@
+{#
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+#}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.1/css/buttons.bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/select/2.0.0/css/select.bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/datetime/1.5.2/css/dataTables.bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/5.0.0/css/fixedColumns.bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="{{ assets_prefix }}/static/dataai/css/editor.bootstrap.min.css">
+
+<div class="header bg-primary pb-6">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+        <div class="col-lg-6 col-7">
+          <h6 id="table_name" class="h2 text-white d-inline-block mb-0">Customer Feedback List</h6>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container col-sm-8">
+  <div class="row mb-3" style="display:flex; align-items:center;">
+    <div class="col-sm-4">
+      <div class="form-group">
+        <label for="dropdown" class="form-label">Outlet:</label>
+        <select id="dropdown" class="form-control form-select">
+          <option value="Sunway Velocity" selected>Sunway Velocity</option>
+          <option value="Mid Valley">Mid Valley</option>
+          <option value="1 Utama">1 Utama</option>
+          <option value="TRX">TRX</option>
+          <!-- Add more options as needed -->
+        </select>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="form-group">
+        <label for="start_date" class="form-label">Start Date:</label>
+        <input type="date" class="form-control" id="start_date" name="date" value="2024-03-04">
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="form-group">
+        <label for="end_date" class="form-label">End Date:</label>
+        <input type="date" class="form-control" id="end_date" name="date" value="2024-03-10">
+      </div>
+    </div>
+    <div class="col-sm-4 d-flex align-items-end justify-content-end">
+      <button type="submit" class="btn btn-primary" onclick="submitFilter()">Filter</button>
+    </div>
+  </div>
+</div>
+<!-- Page content -->
+<div class="container-fluid col-sm-12">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <!-- Card header -->
+        <div class="card-header border-0"></div>
+        <div class="table-responsive">
+          <div id="loading">
+            <img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" alt="Loading..." width="50" height="50">
+          </div>
+          <table id="example" class="table table-striped table-bordered align-items-center table-flush" style="width:100%"></table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.6.3/papaparse.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.2/js/dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.2/js/dataTables.bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/select/2.0.0/js/dataTables.select.min.js"></script>
+<script src="https://cdn.datatables.net/select/2.0.0/js/select.bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/datetime/1.5.2/js/dataTables.dateTime.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/fixedcolumns/5.0.0/js/dataTables.fixedColumns.min.js"></script>
+<script src="https://cdn.datatables.net/fixedcolumns/5.0.0/js/fixedColumns.bootstrap.min.js"></script>
+<script src="{{ assets_prefix }}/static/dataai/js/dataTables.editor.min.js"></script>
+<script src="{{ assets_prefix }}/static/dataai/js/editor.bootstrap.min.js"></script>
+<script src="{{ assets_prefix }}/static/dataai/js/custom_wb_manpower_schedule.js"></script>
+
+<script defer>
+  var editor; // use a global for the submit and return data rendering in the examples
+  var datatable;
+  var table_name = "customer_feedback";
+  var target_call = "/superset/get/table/" + table_name + "/"
+  var startDateValue = '2024-03-04'
+  var endDateValue = '2024-03-10'
+  var outlet_value = "Sunway Velocity";
+  var table_id = ['outlet'];
+  var outlets = ["Sunway Velocity", "1 Utama", "Mid Valley", "TRX"]
+  var column_schema = [{
+    "label": "outlet",
+    "data": "outlet",
+    "name": "outlet",
+    "attr": { "disabled": true }
+  }, {
+    "label": "date",
+    "data": "date",
+    "name": "date",
+    "attr": { "disabled": true }
+  }, {
+    "label": "time",
+    "data": "time",
+    "name": "time",
+    "attr": { "disabled": true }
+  }, {
+    "label": "feedback",
+    "data": "feedback",
+    "name": "feedback",
+    "attr": { "disabled": true }
+  }, {
+    "label": "customer_name",
+    "data": "customer_name",
+    "name": "customer_name",
+    "attr": { "disabled": true }
+  }, {
+    "label": "email",
+    "data": "email",
+    "name": "email",
+    "attr": { "disabled": true }
+  }, {
+    "label": "contact",
+    "data": "contact",
+    "name": "contact",
+    "attr": { "disabled": true }
+  }, {
+    "label": "source",
+    "data": "source",
+    "name": "source",
+    "attr": { "disabled": true }
+  }, {
+    "label": "assignee",
+    "data": "assignee",
+    "name": "assignee",
+    "attr": { "disabled": true }
+  }, {
+    "label": "status",
+    "data": "status",
+    "name": "status",
+  }, {
+    "label": "remarks",
+    "data": "remarks",
+    "name": "remarks",
+  }, {
+    "label": "proof_of_payment",
+    "data": "proof_of_payment",
+    "name": "proof_of_payment",
+    "attr": { "disabled": true }
+  }]
+
+  function submitFilter() {
+    outlet_value = document.getElementById('dropdown').value;
+    startDateValue = document.getElementById('start_date').value;
+    endDateValue = document.getElementById('end_date').value;
+    fetchData(outlet_value, startDateValue, endDateValue, 'update');
+  }
+
+  function fetchData(o, sd, ed, i) {
+    var init = i;
+    $('#example').hide();
+    $('#loading').show();
+    $.ajax({
+      url: target_call,
+      data: {
+        'outlet': o,
+        'start_date': sd,
+        'end_date': ed
+      },
+      success: function(data) {
+        console.log(data)
+        var table_row = data.data;
+        var table = document.getElementById("example");
+        var header = table.createTHead();
+        var row = header.insertRow(0);
+
+        if (init == 'update') {
+          datatable.clear();
+          datatable.rows.add(table_row);
+          $('#example').show();
+          $('#loading').hide();
+          datatable.draw();
+        }
+
+        if (init == 'new') {
+
+          for (var i = 0; i < column_schema.length; i++) {
+            var th = document.createElement('th');
+            th.innerHTML = column_schema[i].data;
+            row.appendChild(th);
+          }
+
+          editor = new DataTable.Editor({
+            ajax: {
+              create: {
+                type: 'POST',
+                url: '/superset/api/edit/custom/table/' + table_name
+              },
+              edit: {
+                type: 'POST',
+                url: '/superset/api/edit/custom/table/' + table_name
+              },
+              remove: {
+                type: 'POST',
+                url: '/superset/api/edit/custom/table/' + table_name
+              },
+            },
+            table: "#example",
+            fields: column_schema,
+            idSrc: table_id[0],
+          });
+
+          $('#example').show();
+          $('#loading').hide();
+
+          datatable = $('#example').DataTable({
+            dom: "Bfrtip",
+            data: table_row,
+            columns: column_schema,
+            select: true,
+            buttons: [{
+              extend: "edit",
+              editor: editor
+            }],
+            aaSorting: [[1,'asc']]
+          });
+        }
+      },
+      timeout: 2000,
+      tryCount: 0,
+      retryLimit: 3,
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+        if (textStatus == 'timeout') {
+          this.tryCount++;
+          console.log("retried: " + this.tryCount)
+          if (this.tryCount <= this.retryLimit) {
+            //try again
+            $.ajax(this);
+            return;
+          } else {
+            alert("Status: " + textStatus + "Error: " + errorThrown);
+          }
+          return;
+        }
+        if (xhr.status == 500) {
+          alert("Status: " + textStatus + "Error: " + errorThrown);
+        } else {
+          alert("Status: " + textStatus + "Error: " + errorThrown);
+        }
+      }
+    });
+  }
+  $(document).ready(function() {
+    fetchData(outlet_value, startDateValue, endDateValue, 'new');
+    console.log("did it complete?");
+  });
+</script>
