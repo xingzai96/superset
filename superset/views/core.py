@@ -1378,7 +1378,7 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
             dataaidb_engine = db.get_engine(app, 'dataaidb')
             df = pd.read_sql_query(
                 f"""
-                SELECT "outlet", TO_CHAR("date", 'YYYY-MM-DD') as "date", "time", feedback, customer_name, email, contact, "source", assignee, status, remarks, proof_of_payment FROM public.customer_feedback
+                SELECT "outlet", TO_CHAR("date", 'YYYY-MM-DD') as "date", TO_CHAR("time", 'HH:MI:SS') as "time", feedback, customer_name, email, contact, "source", assignee, status, remarks, proof_of_payment FROM public.customer_feedback
                 where outlet = '{outlet}' 
                 and "date" >= '{start_date}'
                 and "date" <= '{end_date}'
