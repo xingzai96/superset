@@ -1020,7 +1020,7 @@ class Superset(BaseSupersetView):  # pylint: disable=too-many-public-methods
     @has_access_api
     @event_logger.log_this
     @expose("/custom_wb_stock_planning/")
-    def custom_wb_sale_forecast(self) -> FlaskResponse:
+    def custom_wb_stock_planning(self) -> FlaskResponse:
         return self.render_template("superset/custom_wb_stock_planning.html")
 
     @has_access_api
