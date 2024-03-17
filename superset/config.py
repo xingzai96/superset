@@ -1715,6 +1715,7 @@ HTML_SANITIZATION_SCHEMA_EXTENSIONS = {
         "http://172.188.96.246/superset/custom_wb_sale_forecast/",
         "http://172.188.96.246/superset/custom_wb_web_scraping/",
         "http://172.188.96.246/superset/dashboard/1/",
+        "*",
     ]]
   },
   "tagNames": ["style", "iframe", "audio", "a", "img"],
