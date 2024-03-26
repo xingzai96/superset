@@ -740,9 +740,11 @@ under the License.
             }, {
               extend: "remove",
               editor: editor
-            },
-            'pdfHtml5'
-            ],
+            }, {
+                extend: 'pdfHtml5',
+                orientation: 'landscape',
+                pageSize: 'LEGAL'
+            }],
             fixedColumns: {
               start: 3
             },
