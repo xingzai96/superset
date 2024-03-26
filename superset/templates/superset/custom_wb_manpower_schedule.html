@@ -728,11 +728,6 @@ under the License.
           $('#loading').hide();
           datatable = $('#example').DataTable({
             dom: "Bfrtip",
-            layout: {
-                topStart: {
-                    buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
-                }
-            },
             data: table_row,
             columns: column_schema,
             select: true,
