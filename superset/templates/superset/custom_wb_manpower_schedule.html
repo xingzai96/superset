@@ -741,9 +741,20 @@ under the License.
               extend: "remove",
               editor: editor
             }, {
-                extend: 'pdfHtml5',
-                orientation: 'landscape',
-                pageSize: 'LEGAL'
+              extend:'pdfHtml5',
+              text:'Export PDF',
+              orientation:'landscape',
+              customize : function(doc){
+                  var colCount = new Array();
+                  $(tbl).find('tbody tr:first-child td').each(function(){
+                      if($(this).attr('colspan')){
+                          for(var i=1;i<=$(this).attr('colspan');$i++){
+                              colCount.push('*');
+                          }
+                      }else{ colCount.push('*'); }
+                  });
+                  doc.content[1].table.widths = colCount;
+              }
             }],
             fixedColumns: {
               start: 3
