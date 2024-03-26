@@ -728,9 +728,6 @@ under the License.
           $('#loading').hide();
           datatable = $('#example').DataTable({
             dom: "Bfrtip",
-            buttons: [
-                'pdfHtml5'
-            ],
             data: table_row,
             columns: column_schema,
             select: true,
@@ -743,7 +740,9 @@ under the License.
             }, {
               extend: "remove",
               editor: editor
-            }],
+            },
+            'pdfHtml5'
+            ],
             fixedColumns: {
               start: 3
             },
